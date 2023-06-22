@@ -27,32 +27,33 @@ bool picked_up = 0;
 int pickme = 0;
 bool block = 0;
 
-std::vector<int> boxes_x = {200, 400};
-std::vector<int> boxes_y = {200, 200};
+std::vector<int> boxes_x = { 100 };        //200, 400};
+std::vector<int> boxes_y = { 200 }; //200};
 std::vector<int> boxes_masa = { 100, 100 };
 
-std::vector<int> triangles_x = { 100, 300 };
-std::vector<int> triangles_y = { 200, 200 };
-std::vector<int> triangles_masa = { 100, 100 };
+std::vector<int> triangles_x = { 200 };
+std::vector<int> triangles_y = { 200 };
+std::vector<int> triangles_masa = { 100 };
 
-std::vector<int> circles_x = { 600, 700 };
-std::vector<int> circles_y = { 200, 200 };
+std::vector<int> circles_x = { 300 };//, 700 };
+std::vector<int> circles_y = { 200 };//, 200 };
 std::vector<int> circles_masa = { 100, 100 };
 
-/*zmieniæ ¿eby nie by³o triangle_x itd wszystko zapisuje siê w boxes i jak chce siê stworzyæ trójk¹t to po prostu siê odp funkcja wczyta
-¿eby sprawdza³o czy jest trójk¹tem, kwadratem ... to bd funkcja sprawdzaj¹ca czy jest któr¹œ z tych 3 to oddaje wartoœæ true i mo¿e sprawdzaæ czy x znajduje siê
-w tych figurach aby je podnieœæi mamy pierwsze 3 gotowe póŸniej dodaæ sprawdzanie masy(mo¿e pokazywanie jej?) i mamy 4 to œmieszne budowanie to idk */
+
+/*zmieniÄ‡ Å¼eby nie byÅ‚o triangle_x itd wszystko zapisuje siÄ™ w boxes i jak chce siÄ™ stworzyÄ‡ trÃ³jkÄ…t to po prostu siÄ™ odp funkcja wczyta
+Å¼eby sprawdzaÅ‚o czy jest trÃ³jkÄ…tem, kwadratem ... to bd funkcja sprawdzajÄ…ca czy jest ktÃ³rÄ…Å› z tych 3 to oddaje wartoÅ›Ä‡ true i moÅ¼e sprawdzaÄ‡ czy x znajduje siÄ™
+w tych figurach aby je podnieÅ›Ä‡i mamy pierwsze 3 gotowe pÃ³Åºniej dodaÄ‡ sprawdzanie masy(moÅ¼e pokazywanie jej?) i mamy 4 to Å›mieszne budowanie to idk */
 
 void MyOnPaint(HDC hdc, int x, int y)     
 {
     Graphics graphics(hdc);         
     Pen pen(Color(255, 0, 0, 255));             
-    graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd ¿e wspó³rzêdne zale¿a od tego jak przytrzymasz czy inny chuj i jeœli 
-                                                            // coœ siê zetknie czycos to sie klei do sb albo jak sie kliknie wspó³. sie zapisuja itp itd
+    graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd Å¼e wspÃ³Å‚rzÄ™dne zaleÅ¼a od tego jak przytrzymasz czy inny chuj i jeÅ›li 
+                                                            // coÅ› siÄ™ zetknie czycos to sie klei do sb albo jak sie kliknie wspÃ³Å‚. sie zapisuja itp itd
 }
 
-// zrb wierzcho³ki ile wierzcho³ków ma figura i gdzie
-std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kó³ka sprawdŸ czy s¹ równe       
+// zrb wierzchoÅ‚ki ile wierzchoÅ‚kÃ³w ma figura i gdzie
+std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kÃ³Å‚ka sprawdÅº czy sÄ… rÃ³wne       
 
 void drawBox(HDC hdc, std::vector<int> boxes_x, std::vector<int> boxes_y)
 {
@@ -92,9 +93,97 @@ void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, 
     hdc = BeginPaint(hWnd, &ps);
     MyOnPaint(hdc, x, y);
     drawBox(hdc, boxes_x, boxes_y);
-  //  drawTriangle(hdc, triangles_x, triangles_y);
-  //  drawCircle(hdc, circles_x, circles_y);
+    drawTriangle(hdc, triangles_x, triangles_y);
+    drawCircle(hdc, circles_x, circles_y);
     EndPaint(hWnd, &ps);
+}
+
+void make_tower(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
+{
+    boxes_x = { 100 };
+    boxes_y = { 200 };
+    triangles_x = { 200 };
+    triangles_y = { 200 };
+    circles_x = { 300 };
+    circles_y = { 200 };
+
+    while (x != boxes_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != boxes_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        boxes_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20)
+    {
+        x -= 5;
+        boxes_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    boxes_y[0] = 200;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+
+    while (x != triangles_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != triangles_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        triangles_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20+25)
+    {
+        x -= 5;
+        triangles_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    triangles_y[0] = 150;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+
+    while (x != circles_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != circles_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        circles_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20)
+    {
+        x -= 5;
+        circles_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    circles_y[0] = 100;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -243,7 +332,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
     }
-    // dodaæ picked_up = 0, 1, 2 w zale¿noœci co to jest
+    // dodaÄ‡ picked_up = 0, 1, 2 w zaleÅ¼noÅ›ci co to jest
 
     case WM_KEYDOWN:
         switch (wParam)
@@ -260,7 +349,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 if (block == 0)
                 {
                     x = x - 5;
-                    boxes_x[pickme] -= 5;// tu ograniczenia dla d³ugoœci dŸwigu
+                    boxes_x[pickme] -= 5;// tu ograniczenia dla dÅ‚ugoÅ›ci dÅºwigu
                 }
             }
             else
@@ -318,6 +407,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             boxes_y.push_back(200);
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
+        case VK_DELETE:
+            make_tower(hWnd, hdc, ps, NULL, x, y);
         case 0x0D:
            
 
@@ -336,7 +427,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         else if (picked_up == 1)
                         {
                             picked_up = 0;
-                            /*  while (boxes_y.back() < ground)//dodaæ spadanie
+                            /*  while (boxes_y.back() < ground)//dodaÄ‡ spadanie
                               {
                                   boxes_y.back() -= 5;
                                   repaintWindow(hWnd, hdc, ps, NULL, x, y);
@@ -401,6 +492,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // TODO: Add any drawing code that uses hdc here...
            
             drawBox(hdc, boxes_x, boxes_y);
+            drawCircle(hdc, circles_x, circles_y);
+            drawTriangle(hdc, triangles_x, triangles_y);
             MyOnPaint(hdc, x, y);
             EndPaint(hWnd, &ps);
         }
