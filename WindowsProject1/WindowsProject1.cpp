@@ -39,21 +39,13 @@ std::vector<int> circles_x = { 300 };//, 700 };
 std::vector<int> circles_y = { 200 };//, 200 };
 std::vector<int> circles_masa = { 100, 100 };
 
-
-/*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
-żeby sprawdzało czy jest trójkątem, kwadratem ... to bd funkcja sprawdzająca czy jest którąś z tych 3 to oddaje wartość true i może sprawdzać czy x znajduje się
-w tych figurach aby je podnieśći mamy pierwsze 3 gotowe później dodać sprawdzanie masy(może pokazywanie jej?) i mamy 4 to śmieszne budowanie to idk */
-
 void MyOnPaint(HDC hdc, int x, int y)     
 {
     Graphics graphics(hdc);         
     Pen pen(Color(255, 0, 0, 255));             
     graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd że współrzędne zależa od tego jak przytrzymasz czy inny chuj i jeśli 
                                                             // coś się zetknie czycos to sie klei do sb albo jak sie kliknie współ. sie zapisuja itp itd
-}
-
-// zrb wierzchołki ile wierzchołków ma figura i gdzie
-std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kółka sprawdź czy są równe       
+}       
 
 void drawBox(HDC hdc, std::vector<int> boxes_x, std::vector<int> boxes_y)
 {
@@ -98,14 +90,8 @@ void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, 
     EndPaint(hWnd, &ps);
 }
 
-void make_tower(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
+void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
-    boxes_x = { 100 };
-    boxes_y = { 200 };
-    triangles_x = { 200 };
-    triangles_y = { 200 };
-    circles_x = { 300 };
-    circles_y = { 200 };
 
     while (x != boxes_x[0])
     {
@@ -183,6 +169,87 @@ void make_tower(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, in
     }
 
     circles_y[0] = 100;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+}
+
+void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
+{
+    while (x != circles_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != circles_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        circles_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20)
+    {
+        x -= 5;
+        circles_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    circles_y[0] = 200;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+
+    while (x != boxes_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != boxes_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        boxes_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20 )
+    {
+        x -= 5;
+        boxes_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    boxes_y[0] = 150;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+
+    while (x != triangles_x[0])
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != triangles_y[0])
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100)
+    {
+        y -= 5;
+        triangles_y[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20+25)
+    {
+        x -= 5;
+        triangles_x[0] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    triangles_y[0] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
@@ -408,7 +475,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
         case VK_DELETE:
-            make_tower(hWnd, hdc, ps, NULL, x, y);
+            make_tower_2(hWnd, hdc, ps, NULL, x, y);
         case 0x0D:
            
 
