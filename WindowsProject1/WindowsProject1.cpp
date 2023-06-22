@@ -1,6 +1,3 @@
-// WindowsProject1.cpp : Defines the entry point for the application.
-//
-
 #include "framework.h"
 #include "WindowsProject1.h"
 #include <vector>
@@ -25,10 +22,11 @@ int y = 100;
 int ground = 250;
 bool picked_up = 0;
 int pickme = 0;
+char shape;
 bool block = 0;
 
-std::vector<int> boxes_x = { 100 };        //200, 400};
-std::vector<int> boxes_y = { 200 }; //200};
+std::vector<int> boxes_x = { 100, 800 };        //200, 400};
+std::vector<int> boxes_y = { 200, 200 }; //200};
 std::vector<int> boxes_masa = { 100, 100 };
 
 std::vector<int> triangles_x = { 200 };
@@ -39,13 +37,21 @@ std::vector<int> circles_x = { 300 };//, 700 };
 std::vector<int> circles_y = { 200 };//, 200 };
 std::vector<int> circles_masa = { 100, 100 };
 
+
+/*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
+żeby sprawdzało czy jest trójkątem, kwadratem ... to bd funkcja sprawdzająca czy jest którąś z tych 3 to oddaje wartość true i może sprawdzać czy x znajduje się
+w tych figurach aby je podnieśći mamy pierwsze 3 gotowe później dodać sprawdzanie masy(może pokazywanie jej?) i mamy 4 to śmieszne budowanie to idk */
+
 void MyOnPaint(HDC hdc, int x, int y)     
 {
     Graphics graphics(hdc);         
     Pen pen(Color(255, 0, 0, 255));             
     graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd że współrzędne zależa od tego jak przytrzymasz czy inny chuj i jeśli 
                                                             // coś się zetknie czycos to sie klei do sb albo jak sie kliknie współ. sie zapisuja itp itd
-}       
+}
+
+// zrb wierzchołki ile wierzchołków ma figura i gdzie
+std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kółka sprawdź czy są równe       
 
 void drawBox(HDC hdc, std::vector<int> boxes_x, std::vector<int> boxes_y)
 {
@@ -60,7 +66,7 @@ void drawTriangle(HDC hdc, std::vector<int> triangles_x, std::vector<int> triang
 {
     Graphics graphics(hdc);
     Pen pen(Color(255, 255, 0, 0));
-    for (int g = 0; g < boxes_x.size(); g++)
+    for (int g = 0; g < triangles_x.size(); g++)
     {
         graphics.DrawLine(&pen, triangles_x[g], triangles_y[g], triangles_x[g] - 25, triangles_y[g] + 50);
         graphics.DrawLine(&pen, triangles_x[g], triangles_y[g], triangles_x[g] + 25, triangles_y[g] + 50);
@@ -75,6 +81,7 @@ void drawCircle(HDC hdc, std::vector<int> circles_x, std::vector<int> circles_y)
     for (int g = 0; g < circles_x.size(); g++)
         graphics.DrawArc(&pen, circles_x[g], circles_y[g], 50, 50, 0, 360);
 }
+
 
 void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, int y)
 {
@@ -92,6 +99,12 @@ void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, 
 
 void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
+    boxes_x = { 100 };
+    boxes_y = { 200 };
+    triangles_x = { 200 };
+    triangles_y = { 200 };
+    circles_x = { 300 };
+    circles_y = { 200 };
 
     while (x != boxes_x[0])
     {
@@ -399,37 +412,66 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
     }
-    // dodać picked_up = 0, 1, 2 w zależności co to jest
+    // do zrb dodać block'i góra dół i trójkąt do tych równań może hitboxy polepszyć
 
     case WM_KEYDOWN:
         switch (wParam)
         {
         case VK_LEFT:
             block = 0;
-            if (picked_up == 1)
+            if (picked_up == 1 and shape == 's')
             {
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
-                    if (boxes_x[pickme] - 5 == boxes_x[g] + 50 and boxes_y[pickme] > boxes_y[g]-50 and boxes_y[pickme] < boxes_y[g] + 50)
+                    if (boxes_x[pickme] == boxes_x[g] - 50 and boxes_y[pickme] < boxes_y[g] + 50 and boxes_y[pickme] > boxes_y[g] - 50)
+                        block = 1;
+                } 
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (boxes_x[pickme] - 50 == circles_x[g] and boxes_y[pickme] < circles_y[g] + 50 and boxes_y[pickme] > circles_y[g] - 50)
                         block = 1;
                 }
                 if (block == 0)
                 {
                     x = x - 5;
-                    boxes_x[pickme] -= 5;// tu ograniczenia dla długości dźwigu
+                    boxes_x[pickme] -= 5;
                 }
             }
-            else
+            if (picked_up == 1 and shape == 'c')
+            {
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (circles_x[pickme] - 50 == circles_x[g] and circles_y[pickme] > circles_y[g] + 50 and circles_y[pickme] < circles_y[g] - 50)
+                        block = 1;
+                }
+                for (int g = 0; g < boxes_x.size(); g++)
+                {
+                    if (circles_x[pickme] - 50 == boxes_x[g] and circles_y[pickme] - 50 > boxes_y[g] and circles_y[pickme] < boxes_y[g] - 50)
+                        block = 1;
+                }
+                if (block == 0)
+                {
+                    x = x - 5;
+                    circles_x[pickme] -= 5;
+                }
+            }
+            if (picked_up == 0)
                 x = x - 5;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
+
         case VK_RIGHT:
             block = 0;
-            if (picked_up == 1)
+            if (picked_up == 1 and shape == 's')
             {
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
                     if (boxes_x[pickme] + 50 == boxes_x[g] and boxes_y[pickme] > boxes_y[g] - 50 and boxes_y[pickme] < boxes_y[g] + 50)
+                        block = 1;
+                } 
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (boxes_x[pickme] + 50 == circles_x[g] and boxes_y[pickme] > circles_y[g] - 50 and boxes_y[pickme] < circles_y[g] + 50)
                         block = 1;
                 }
                 if (block == 0)
@@ -438,20 +480,42 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     boxes_x[pickme] += 5;
                 }
             }
-            else
+            if (picked_up == 1 and shape == 'c')
+            {
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (circles_x[pickme] + 50 == circles_x[g] and circles_y[pickme] > circles_y[g] - 50 and circles_y[pickme] < circles_y[g] + 50)
+                        block = 1;
+                }
+                for (int g = 0; g < boxes_x.size(); g++)
+                {
+                    if (circles_x[pickme] + 50 == boxes_x[g] and circles_y[pickme]+50 > boxes_y[g] and circles_y[pickme] < boxes_y[g] + 50)
+                        block = 1;
+                }
+                if (block == 0)
+                {
+                    x = x + 5;
+                    circles_x[pickme] += 5;
+                }
+            }
+            if(picked_up == 0)
                 x = x + 5;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
-            break;                          
+            break;         
+
         case VK_UP:
             if (y > 15)
                 y = y - 5;
-            if (picked_up == 1)
+            if (picked_up == 1 and shape == 's')
                 boxes_y[pickme] -= 5;
+            if (picked_up == 1 and shape == 'c')
+                circles_y[pickme] -= 5;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
-        case VK_DOWN:
+
+        case VK_DOWN:// nie ma hitboxa dokończonego
             block = 0;
-            if (picked_up == 1)
+            if (picked_up == 1 and shape == 's')
             {
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
@@ -464,11 +528,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     boxes_y[pickme] += 5;
                 }
             }
-            else
+            if (picked_up == 1 and shape == 'c')
+            {
+                for (int g = 0; g < boxes_x.size(); g++)
+                {
+                    if (boxes_y[pickme] == boxes_y[g] - 50 and boxes_x[pickme] > boxes_x[g] - 50 and boxes_x[pickme] < boxes_x[g] + 50)
+                        block = 1;
+                }
+                if (block == 0)
+                {
+                    y = y + 5;
+                    circles_y[pickme] += 5;
+                }
+            }
+            if(picked_up == 0)
             y = y + 5;
-
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
+
         case VK_END:
             boxes_x.push_back(200);
             boxes_y.push_back(200);
@@ -477,40 +554,108 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case VK_DELETE:
             make_tower_2(hWnd, hdc, ps, NULL, x, y);
         case 0x0D:
-           
-
-            for (int g = 0; g < boxes_x.size(); g++)
+            //kółka
+            for (int g = 0; g < circles_x.size(); g++)
             {
-                if (y > boxes_y[g] and y < boxes_y[g] + 100)
+                if (y > circles_y[g] and y < circles_y[g] + 50)
                 {
-                    if (x >= boxes_x[g] and x <= boxes_x[g] + 100)
+                    if (x >= circles_x[g] and x <= circles_x[g] + 50)
                     {
                         
                         if (picked_up == 0)
                         {
                             pickme = g;
                             picked_up = 1;
+                            shape = 'c';
                         }
                         else if (picked_up == 1)
                         {
                             picked_up = 0;
-                            /*  while (boxes_y.back() < ground)//dodać spadanie
-                              {
-                                  boxes_y.back() -= 5;
-                                  repaintWindow(hWnd, hdc, ps, NULL, x, y);
-                              }
-                            */
                             bool action = 0;
                             bool tower = 0;
                             int hight = ground;
+                            bool diff = 0;
                           
+                            for (int h = 0; h < circles_y.size(); h++)
+                            {
+                                if (action == 0)
+                                {
+                                    if (circles_y[g] != circles_y[h] and circles_x[g] - 50 <= circles_x[h] and circles_x[g] + 50 >= circles_x[h])
+                                    {
+                                        if (circles_y[h] == ground - 150 )
+                                        {
+                                            tower = 1;
+                                        }
+                                        if (hight > circles_y[h])
+                                            hight = circles_y[h];
+                                    }
+                                }
+                            }
+                            for (int h = 0; h < boxes_y.size(); h++)
+                            {
+                                if (action == 0)
+                                {
+                                    if (circles_y[g] != boxes_y[h] and circles_x[g] - 50 <= boxes_x[h] and circles_x[g] + 50 >= boxes_x[h])
+                                    {
+                                        diff = 1;
+                                    }
+                                }
+                            }
+                            for (int h = 0; h < circles_y.size(); h++)
+                            {
+                                if (action == 0)
+                                {
+                                    if (circles_y[g] != circles_y[h] and circles_x[g] - 50 <= circles_x[h] and circles_x[g] + 50 >= circles_x[h])
+                                    {
+                                        if (tower == 0 and diff == 0)
+                                        {
+                                            circles_y[g] = hight - 50;
+                                            action = 1;
+                                        }
+                                        if (tower == 1 or diff == 1)
+                                        {
+                                            picked_up = 1;
+                                            action = 1;
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            if(action == 0)
+                                circles_y[g] = ground-50;
+                            repaintWindow(hWnd, hdc, ps, NULL, x, y);
+                        }
+                    }
+                }
+            }
+            // kwadraty
+            for (int g = 0; g < boxes_x.size(); g++)
+            {
+                if (y > boxes_y[g] and y < boxes_y[g] + 100)
+                {
+                    if (x >= boxes_x[g] and x <= boxes_x[g] + 100)
+                    {
+
+                        if (picked_up == 0)
+                        {
+                            pickme = g;
+                            picked_up = 1;
+                            shape = 's';
+                        }
+                        else if (picked_up == 1)
+                        {
+                            picked_up = 0;
+                            bool action = 0;
+                            bool tower = 0;
+                            int hight = ground;
+                            bool diff = 0;
                             for (int h = 0; h < boxes_y.size(); h++)
                             {
                                 if (action == 0)
                                 {
                                     if (boxes_y[g] != boxes_y[h] and boxes_x[g] - 50 <= boxes_x[h] and boxes_x[g] + 50 >= boxes_x[h])
                                     {
-                                        if (boxes_y[h] == ground - 150 )
+                                        if (boxes_y[h] == ground - 150)
                                         {
                                             tower = 1;
                                         }
@@ -530,17 +675,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                                             boxes_y[g] = hight - 50;
                                             action = 1;
                                         }
-                                        if (tower == 1)
+                                        if (tower == 1 or diff == 1)
                                         {
                                             picked_up = 1;
                                             action = 1;
                                         }
-                                        
                                     }
                                 }
                             }
-                            if(action == 0)
-                                boxes_y[g] = ground-50;    
+                        //koło
+                            for (int h = 0; h < circles_y.size(); h++)
+                            {
+
+                                    if (boxes_x[g] <= circles_x[h] and boxes_x[g] >= circles_x[h] - 50)
+                                    {
+                                            picked_up = 1;
+                                            action = 1;
+                                    }
+                            }
+                        //trójkąt
+                            for (int h = 0; h < triangles_y.size(); h++)
+                            {
+
+                                if (boxes_x[g] <= triangles_x[h] and boxes_x[g] >= triangles_x[h] - 50)
+                                {
+                                    picked_up = 1;
+                                    action = 1;
+                                }
+                            }
+                            if (action == 0)
+                                boxes_y[g] = ground - 50;
                             repaintWindow(hWnd, hdc, ps, NULL, x, y);
                         }
                     }
