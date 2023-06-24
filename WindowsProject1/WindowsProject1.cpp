@@ -27,17 +27,17 @@ int pickme = 0;
 char shape;
 bool block = 0;
 
-std::vector<int> boxes_x = { 100, 800 };        //200, 400};
-std::vector<int> boxes_y = { 200, 200 }; //200};
+std::vector<int> boxes_x = { 1000 };        //200, 400};
+std::vector<int> boxes_y = { 200 }; //200};
 std::vector<int> boxes_masa = { 100, 100 };
 
-std::vector<int> triangles_x = { 200 };
-std::vector<int> triangles_y = { 200 };
-std::vector<int> triangles_masa = { 100 };
+std::vector<int> triangles_x = { 200, 300, 400 };
+std::vector<int> triangles_y = { 200 , 200, 200};
+std::vector<int> triangles_masa = { 100 ,100,100};
 
-std::vector<int> circles_x = { 300 };//, 700 };
-std::vector<int> circles_y = { 200 };//, 200 };
-std::vector<int> circles_masa = { 100, 100 };
+std::vector<int> circles_x = { 500,600,700 };//, 700 };
+std::vector<int> circles_y = { 200, 200, 200 };//, 200 };
+std::vector<int> circles_masa = { 100, 100, 100 };
 
 
 /*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
@@ -433,6 +433,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (boxes_x[pickme] - 50 == circles_x[g] and boxes_y[pickme] < circles_y[g] + 50 and boxes_y[pickme] > circles_y[g] - 50)
                         block = 1;
                 }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    int szer = (boxes_y[pickme] + 50 - triangles_y[g]) / 2;
+                    if (boxes_x[pickme]+2 <= triangles_x[g] + szer and boxes_y[pickme] + 50 > triangles_y[g] and boxes_y[pickme] < triangles_y[g] + 50)
+                        block = 1;
+                }
                 if (block == 0)
                 {
                     x = x - 5;
@@ -451,6 +457,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (circles_x[pickme] - 50 == boxes_x[g] and circles_y[pickme] - 50 > boxes_y[g] and circles_y[pickme] < boxes_y[g] - 50)
                         block = 1;
                 }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    int szer = (circles_y[pickme]+50 - triangles_y[g]) / 2;
+                    if (circles_x[pickme] <= triangles_x[g] + szer and circles_y[pickme] + 50 > triangles_y[g] and circles_y[pickme] < triangles_y[g] + 50)
+                        block = 1;
+                }
                 if (block == 0)
                 {
                     x = x - 5;
@@ -461,19 +473,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 for (int g = 0; g <circles_x.size(); g++)
                 {
-                    if (triangles_x[pickme] - 25 == circles_x[g] and triangles_y[pickme] > circles_y[g] + 50 and triangles_y[pickme] < circles_y[g] - 50)
+                    if (triangles_x[pickme] - 25 == circles_x[g]+50 and triangles_y[pickme]+50 >= circles_y[g] and triangles_y[pickme]+50 <= circles_y[g]+50)
                         block = 1;
                 }
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
-                    if (triangles_x[pickme] - 25 == boxes_x[g]+50 and triangles_y[pickme] >= boxes_y[g] and triangles_y[pickme] <= boxes_y[g] + 50)
+                    if (triangles_x[pickme] - 25 == boxes_x[g]+50 and triangles_y[pickme]+50 >= boxes_y[g] and triangles_y[pickme]+50 <= boxes_y[g]+50)
                         block = 1;
                 }
                 for (int g = 0; g < triangles_x.size(); g++)
                 {
-                    int szer = (triangles_y[pickme] - triangles_y[g]) / 2;
-                    if (triangles_x[pickme]-25-5 >= triangles_x[g]+szer and triangles_y[pickme] + 50 > boxes_y[g] and triangles_y[pickme] < boxes_y[g] + 50)
-                        block = 1;
+                    if (pickme != g) 
+                    {
+                        int szer = (triangles_y[pickme] - triangles_y[g]) / 2;
+                        if (triangles_x[pickme] - 25 - 5 <= triangles_x[g] + szer and triangles_x[pickme] - 25 - 5 > triangles_x[g]+25 and triangles_y[pickme] + 50 > triangles_y[g] and triangles_y[pickme] < triangles_y[g] + 50)
+                            block = 1;
+                    }
                 }
                 if (block == 0)
                 {
@@ -500,6 +515,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (boxes_x[pickme] + 50 == circles_x[g] and boxes_y[pickme] > circles_y[g] - 50 and boxes_y[pickme] < circles_y[g] + 50)
                         block = 1;
                 }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    int szer = (boxes_y[pickme] + 50 - triangles_y[g]) / 2;
+                    if (boxes_x[pickme] +50 <= triangles_x[g] - szer and boxes_y[pickme] + 50 > triangles_y[g] and boxes_y[pickme] < triangles_y[g] + 50)
+                        block = 1;
+                }
                 if (block == 0)
                 {
                     x = x + 5;
@@ -518,6 +539,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (circles_x[pickme] + 50 == boxes_x[g] and circles_y[pickme]+50 > boxes_y[g] and circles_y[pickme] < boxes_y[g] + 50)
                         block = 1;
                 }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    int szer = (circles_y[pickme] + 50 - triangles_y[g]) / 2;
+                    if (circles_x[pickme]+50 >= triangles_x[g] - szer and circles_y[pickme] + 50 > triangles_y[g] and circles_y[pickme] < triangles_y[g] + 50)
+                        block = 1;
+                }
                 if (block == 0)
                 {
                     x = x + 5;
@@ -528,34 +555,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 for (int g = 0; g < circles_x.size(); g++)
                 {
-                    if (triangles_x[pickme] + 25 == circles_x[g] and triangles_y[pickme] > circles_y[g] + 50 and triangles_y[pickme] < circles_y[g] - 50)
+                    if (triangles_x[pickme] + 25 == circles_x[g] and triangles_y[pickme]+50 >= circles_y[g] and triangles_y[pickme]+50 <= circles_y[g] + 50)
                         block = 1;
                 }
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
-                    if (triangles_x[pickme] + 25 == boxes_x[g] and triangles_y[pickme] >= boxes_y[g] and triangles_y[pickme] <= boxes_y[g] + 50)
+                    if (triangles_x[pickme] + 25 == boxes_x[g] and triangles_y[pickme]+50 >= boxes_y[g] and triangles_y[pickme]+50 <= boxes_y[g] + 50)
                         block = 1;
                 }
                 for (int g = 0; g < triangles_x.size(); g++)
                 {
-                    int szer;
-                    if (triangles_y[pickme] >= triangles_y[g])
+                    if(g != pickme)
                     {
-                        szer = (triangles_y[pickme] + 50 - triangles_y[g]) / 2;
-                        if (triangles_x[pickme] +szer >= triangles_x[g] -25 and triangles_y[pickme] < triangles_y[g] + 50)
-                            block = 1;
-                    }
-                    if (triangles_y[pickme] < triangles_y[g])
-                    {
-                        szer = (triangles_y[g] + 50 - triangles_y[pickme]) / 2;
-                        if (triangles_x[pickme] + 25 + 5 >= triangles_x[g] - szer and triangles_y[pickme]+50 > triangles_y[g] )
-                            block = 1;
+                        int szer;
+                        if (triangles_y[pickme] >= triangles_y[g])
+                        {
+                            szer = (triangles_y[pickme] + 50 - triangles_y[g]) / 2;
+                            if (triangles_x[pickme] + szer >= triangles_x[g] - 25 and triangles_y[pickme] < triangles_y[g] + 50)
+                                block = 1;
+                        }
+                        if (triangles_y[pickme] < triangles_y[g])
+                        {
+                            szer = (triangles_y[g] + 50 - triangles_y[pickme]) / 2;
+                            if (triangles_x[pickme] + 25 + 5 >= triangles_x[g] - szer and triangles_y[pickme] + 50 > triangles_y[g])
+                                block = 1;
+                        }
                     }
                 }
                 if (block == 0)
                 {
                     x = x + 5;
-                    triangles_x[pickme] -= 5;
+                    triangles_x[pickme] += 5;
                 }
             }
             if(picked_up == 0)
@@ -570,6 +600,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 boxes_y[pickme] -= 5;
             if (picked_up == 1 and shape == 'c')
                 circles_y[pickme] -= 5;
+            if (picked_up == 1 and shape == 't')
+                triangles_y[pickme] -= 5;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
 
@@ -582,6 +614,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (boxes_y[pickme] == boxes_y[g] - 50 and boxes_x[pickme] > boxes_x[g] - 50 and boxes_x[pickme] < boxes_x[g] + 50)
                         block = 1;
                 }
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (boxes_y[pickme] == circles_y[g] - 50 and boxes_x[pickme] > circles_x[g] - 50 and boxes_x[pickme] < circles_x[g] + 50)
+                        block = 1;
+                }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    if (boxes_x[pickme] + 50 > triangles_x[g] - 25 and boxes_x[pickme] + 50 < triangles_x[g])
+                    {
+                        int wys = 2 * (-boxes_x[pickme] - 50 + triangles_x[g]);
+                        if(boxes_y[pickme]+50>=triangles_y[g]+wys)
+                            block = 1;
+                    }
+                    if (boxes_x[pickme] > triangles_x[g] and boxes_x[pickme] < triangles_x[g] + 25)
+                    {
+                        int wys = 2 * (boxes_x[pickme] - triangles_x[g]);
+                        if (boxes_y[pickme] + 50 >= triangles_y[g] + wys)
+                            block = 1;
+                    }
+                    if (boxes_x[pickme] + 50 > triangles_y[g] and boxes_x[pickme] < triangles_x[g] and boxes_y[pickme] + 50 == triangles_y[g])
+                        block = 1;
+                        
+                }
                 if (block == 0)
                 {
                     y = y + 5;
@@ -592,8 +647,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
-                    if (boxes_y[pickme] == boxes_y[g] - 50 and boxes_x[pickme] > boxes_x[g] - 50 and boxes_x[pickme] < boxes_x[g] + 50)
+                    if (circles_y[pickme] == boxes_y[g] - 50 and circles_x[pickme] > boxes_x[g] - 50 and circles_x[pickme] < boxes_x[g] + 50)
                         block = 1;
+                }
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (circles_y[pickme] == circles_y[g] - 50 and circles_x[pickme] > circles_x[g] - 50 and circles_x[pickme] < circles_x[g] + 50)
+                        block = 1;
+                }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    if (circles_x[pickme] + 50 > triangles_x[g] - 25 and circles_x[pickme] + 50 < triangles_x[g])
+                    {
+                        int wys = 2 * (-circles_x[pickme] - 50 + triangles_x[g]);
+                        if (circles_y[pickme] + 50 >= triangles_y[g] + wys)
+                            block = 1;
+                    }
+                    if (circles_x[pickme] > triangles_x[g] and circles_x[pickme] < triangles_x[g] + 25)
+                    {
+                        int wys = 2 * (circles_x[pickme] - triangles_x[g]);
+                        if (circles_y[pickme] + 50 >= triangles_y[g] + wys)
+                            block = 1;
+                    }
+                    if (circles_x[pickme] + 50 > triangles_y[g] and circles_x[pickme] < triangles_x[g] and circles_y[pickme] + 50 == triangles_y[g])
+                        block = 1;
+
                 }
                 if (block == 0)
                 {
@@ -601,11 +679,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     circles_y[pickme] += 5;
                 }
             }
-            if(picked_up == 0)
-            y = y + 5;
-            repaintWindow(hWnd, hdc, ps, NULL, x, y);
-            break;
+            if (picked_up == 1 and shape == 't')
+            {
+                for (int g = 0; g < boxes_x.size(); g++)
+                {
+                    if (triangles_y[pickme] == boxes_y[g] - 50 and triangles_x[pickme] > boxes_x[g] - 50 and triangles_x[pickme] < boxes_x[g] + 50)
+                        block = 1;
+                }
+                for (int g = 0; g < circles_x.size(); g++)
+                {
+                    if (triangles_y[pickme] == circles_y[g] - 50 and triangles_x[pickme] > circles_x[g] - 50 and triangles_x[pickme] < circles_x[g] + 50)
+                        block = 1;
+                }
+                for (int g = 0; g < triangles_x.size(); g++)
+                {
+                    if (triangles_x[pickme] + 25 > triangles_x[g] - 25 and triangles_x[pickme] + 25 < triangles_x[g])
+                    {
+                        int wys = 2 * (-triangles_x[pickme] - 25 + triangles_x[g]);
+                        if (triangles_y[pickme] + 50 >= triangles_y[g] + wys)
+                            block = 1;
+                    }
+                    if (triangles_x[pickme] - 25 > triangles_x[g] and triangles_x[pickme] - 25 < triangles_x[g] + 25)
+                    {
+                        int wys = 2 * (triangles_x[pickme] - 25 - triangles_x[g]);
+                        if (triangles_y[pickme] + 50 >= triangles_y[g] + wys)
+                            block = 1;
+                    }
+                    if (triangles_x[pickme] + 25 > triangles_y[g] and triangles_x[pickme] - 25 < triangles_x[g] and triangles_y[pickme] + 50 == triangles_y[g])
+                        block = 1;
 
+                    if (block == 0)
+                    {
+                        y = y + 5;
+                        triangles_y[pickme] += 5;
+                    }
+                }
+            }
+            if (picked_up == 0)
+               y = y + 5;
+            
+                repaintWindow(hWnd, hdc, ps, NULL, x, y);
+                break;
+         
         case VK_END:
             boxes_x.push_back(200);
             boxes_y.push_back(200);
@@ -614,7 +729,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case VK_DELETE:
             make_tower_2(hWnd, hdc, ps, NULL, x, y);
         case 0x0D:
-            //kółka
+            //kółka 
             for (int g = 0; g < circles_x.size(); g++)
             {
                 if (y > circles_y[g] and y < circles_y[g] + 50)
@@ -640,7 +755,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             {
                                 if (action == 0)
                                 {
-                                    if (circles_y[g] != circles_y[h] and circles_x[g] - 50 <= circles_x[h] and circles_x[g] + 50 >= circles_x[h])
+                                    if (circles_y[pickme] != circles_y[h] and circles_x[pickme] - 50 <= circles_x[h] and circles_x[pickme] + 50 >= circles_x[h])
                                     {
                                         if (circles_y[h] == ground - 150 )
                                         {
@@ -648,16 +763,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                                         }
                                         if (hight > circles_y[h])
                                             hight = circles_y[h];
-                                    }
-                                }
-                            }
-                            for (int h = 0; h < boxes_y.size(); h++)
-                            {
-                                if (action == 0)
-                                {
-                                    if (circles_y[g] != boxes_y[h] and circles_x[g] - 50 <= boxes_x[h] and circles_x[g] + 50 >= boxes_x[h])
-                                    {
-                                        diff = 1;
                                     }
                                 }
                             }
@@ -679,6 +784,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                                         }
                                         
                                     }
+                                }
+                            }
+                            //kwadraty
+                            for (int h = 0; h < boxes_y.size(); h++)
+                            {
+
+                                if (circles_x[g]+50 >= boxes_x[h] and circles_x[g] <= boxes_x[h] + 50)
+                                {
+                                    picked_up = 1;
+                                    action = 1;
+                                }
+                            }
+                            //trójkąty
+                            for (int h = 0; h < triangles_y.size(); h++)
+                            {
+
+                                if (circles_x[g] <= triangles_x[h] and circles_x[g] >= triangles_x[h] - 50)
+                                {
+                                    picked_up = 1;
+                                    action = 1;
                                 }
                             }
                             if(action == 0)
@@ -793,18 +918,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             int hight = ground;
                             bool diff = 0;
                             //trójkąty
-                            for (int h = 0; h < triangles_y.size(); h++)
+                            for (int h = 0; h < triangles_x.size(); h++)
                             {
                                 if (action == 0)
                                 {
-                                    if (pickme != h and triangles_x[g] <= triangles_x[h]-25 and triangles_x[g] >= triangles_x[h]+25)
+                                    if (pickme != h and triangles_x[g] >= triangles_x[h]-25 and triangles_x[g] <= triangles_x[h]+25)
                                     {
-                                        if (boxes_y[h] == ground - 150)
+                                        if (triangles_y[h] == ground - 150)
                                         {
                                             tower = 1;
                                         }
                                         if (hight > triangles_y[h])
-                                            hight = triangles_y[h];
+                                           hight = triangles_y[h];
                                     }
                                 }
                             }
@@ -813,7 +938,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             {
                                 if (action == 0)
                                 {
-                                    if (triangles_y[g] != triangles_y[h] and triangles_x[g] <= triangles_x[h]-25 and triangles_x[g] >= triangles_x[h]+25)
+                                    if (triangles_y[pickme] != triangles_y[h] and triangles_x[pickme] >= triangles_x[h]-25 and triangles_x[pickme] <= triangles_x[h]+25)
                                     {
                                         if (tower == 0)
                                         {
@@ -829,27 +954,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                                 }
                             }
                             //koło
-                            for (int h = 0; h < circles_y.size(); h++)
+                            for (int h = 0; h < circles_x.size(); h++)
                             {
 
-                                if (triangles_x[g] <= circles_x[h]+75 and triangles_x[g]+25 >= circles_x[h])
+                                if (triangles_x[pickme]-25 <= circles_x[h]+50 and triangles_x[pickme]+25 >= circles_x[h])
                                 {
                                     picked_up = 1;
                                     action = 1;
                                 }
                             }
                             //kwadrat
-                            for (int h = 0; h < boxes_y.size(); h++)
+                            for (int h = 0; h < boxes_x.size(); h++)
                             {
                                
-                                if (triangles_x[g]-25 <= boxes_x[h] + 25 and triangles_x[g]+25 >= boxes_x[h] - 25)
+                                if (triangles_x[pickme]-25 <= boxes_x[h] + 50 and triangles_x[pickme]+25 >= boxes_x[h])
                                 {
                                     picked_up = 1;
                                     action = 1;
                                 }
                             }
+
                             if (action == 0)
-                                boxes_y[g] = ground - 50;
+                                triangles_y[pickme] = ground - 50;
                             repaintWindow(hWnd, hdc, ps, NULL, x, y);
                         }
                     }
