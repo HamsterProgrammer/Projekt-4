@@ -29,15 +29,15 @@ bool block = 0;
 
 std::vector<int> boxes_x = { 1000 };        //200, 400};
 std::vector<int> boxes_y = { 200 }; //200};
-std::vector<int> boxes_masa = { 100, 100 };
+std::vector<int> boxes_masa = { 99};
 
 std::vector<int> triangles_x = { 200, 300, 400 };
 std::vector<int> triangles_y = { 200 , 200, 200};
-std::vector<int> triangles_masa = { 100 ,100,100};
+std::vector<int> triangles_masa = { 99 ,98,100};
 
 std::vector<int> circles_x = { 500,600,700 };//, 700 };
 std::vector<int> circles_y = { 200, 200, 200 };//, 200 };
-std::vector<int> circles_masa = { 100, 100, 100 };
+std::vector<int> circles_masa = { 90, 90, 120 };
 
 
 /*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
@@ -536,13 +536,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
                 for (int g = 0; g < boxes_x.size(); g++)
                 {
-                    if (circles_x[pickme] + 50 == boxes_x[g] and circles_y[pickme]+50 > boxes_y[g] and circles_y[pickme] < boxes_y[g] + 50)
+                    if (circles_x[pickme] + 50 == boxes_x[g] and circles_y[pickme] > boxes_y[g] - 50 and circles_y[pickme] < boxes_y[g] + 50)
                         block = 1;
                 }
                 for (int g = 0; g < triangles_x.size(); g++)
                 {
                     int szer = (circles_y[pickme] + 50 - triangles_y[g]) / 2;
-                    if (circles_x[pickme]+50 >= triangles_x[g] - szer and circles_y[pickme] + 50 > triangles_y[g] and circles_y[pickme] < triangles_y[g] + 50)
+                    if (circles_x[pickme]+50 >= triangles_x[g] - szer and circles_x[pickme] + 50 <= triangles_x[g] + szer and circles_y[pickme] + 50 > triangles_y[g] and circles_y[pickme] < triangles_y[g] + 50)
                         block = 1;
                 }
                 if (block == 0)
@@ -737,7 +737,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= circles_x[g] and x <= circles_x[g] + 50)
                     {
                         
-                        if (picked_up == 0)
+                        if (picked_up == 0 and circles_masa[g]<100)
                         {
                             pickme = g;
                             picked_up = 1;
@@ -821,7 +821,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= boxes_x[g] and x <= boxes_x[g] + 50)
                     {
 
-                        if (picked_up == 0)
+                        if (picked_up == 0 and boxes_masa[g] < 100)
                         {
                             pickme = g;
                             picked_up = 1;
@@ -904,7 +904,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= triangles_x[g] - szer and x <= triangles_x[g] + szer)
                     {
 
-                        if (picked_up == 0)
+                        if (picked_up == 0 and triangles_masa[g] < 100)
                         {
                             pickme = g;
                             picked_up = 1;
