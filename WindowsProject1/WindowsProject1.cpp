@@ -237,7 +237,7 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100-50 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[searching_triangle] -= 5;
@@ -390,7 +390,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100-50 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[searching_triangle] -= 5;
