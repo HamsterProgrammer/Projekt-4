@@ -41,22 +41,17 @@ void MyOnPaint(HDC hdc, int x, int y)
 
 // zrb wierzchołki ile wierzchołków ma figura i gdzie
 std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kółka sprawdź czy są równe       
-/*
-void drawBox(HDC hdc, Shapes boxes)
-{
-    Graphics graphics(hdc);
-    Pen pen(Color(255, 255, 0, 0));
-    for (int g = 0; g < boxes.x.size(); g++)
-        graphics.DrawRectangle(&pen, boxes.x[g], boxes.y[g], 50, 50);
 
-}*/
-void drawBox(HDC hdc, Shapes boxes)
+void drawBox(HDC hdc, Shapes &boxes)
 {
     Graphics graphics(hdc);
     Pen pen(Color(255, 255, 0, 0));
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
-
+    if (bDrawSquare) {
+        boxes.addNewShape(300, 200, 92);
+        bDrawSquare = false;
+    }
     for (int g = 0; g < boxes.x.size(); g++)
     {
         int centerX = boxes.x[g] + 25;  // Calculate the x-coordinate of the center of the box
@@ -72,33 +67,17 @@ void drawBox(HDC hdc, Shapes boxes)
         graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
     }
 }
-/*
-void drawTriangle(HDC hdc, Shapes triangles)
-{
-    Graphics graphics(hdc);
-    Pen pen(Color(255, 255, 0, 0));
-    for (int g = 0; g < triangles.x.size(); g++)
-    {
-        graphics.DrawLine(&pen, triangles.x[g], triangles.y[g], triangles.x[g] - 25, triangles.y[g] + 50);
-        graphics.DrawLine(&pen, triangles.x[g], triangles.y[g], triangles.x[g] + 25, triangles.y[g] + 50);
-        graphics.DrawLine(&pen, triangles.x[g] - 25, triangles.y[g] + 50, triangles.x[g] + 25, triangles.y[g] + 50);
-    }
-}
 
-void drawCircle(HDC hdc, Shapes circles)
-{
-    Graphics graphics(hdc);
-    Pen pen(Color(255, 255, 0, 0));
-    for (int g = 0; g < circles.x.size(); g++)
-        graphics.DrawArc(&pen, circles.x[g], circles.y[g], 50, 50, 0, 360);
-}*/
-void drawTriangle(HDC hdc, Shapes triangles)
+void drawTriangle(HDC hdc, Shapes &triangles)
 {
     Graphics graphics(hdc);
     Pen pen(Color(255, 255, 0, 0));
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
-
+    if (bDrawTriangle) {
+        triangles.addNewShape(710, 200, 92);
+        bDrawTriangle = false;
+    }
     for (int g = 0; g < triangles.x.size(); g++)
     {
         graphics.DrawLine(&pen, triangles.x[g], triangles.y[g], triangles.x[g] - 25, triangles.y[g] + 50);
@@ -117,13 +96,16 @@ void drawTriangle(HDC hdc, Shapes triangles)
     }
 }
 
-void drawCircle(HDC hdc, Shapes circles)
+void drawCircle(HDC hdc, Shapes &circles)
 {
     Graphics graphics(hdc);
     Pen pen(Color(255, 255, 0, 0));
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
-
+    if (bDrawCircle) {
+        circles.addNewShape(420, 200, 92);
+        bDrawCircle = false;
+    }
     for (int g = 0; g < circles.x.size(); g++)
     {
         graphics.DrawArc(&pen, circles.x[g], circles.y[g], 50, 50, 0, 360);
@@ -542,16 +524,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
         case IDM_CIRCLE:
-            bDrawCircle != bDrawCircle;
-            // addNewCircle(circles_x, circles_y, circles_masa);
+            bDrawCircle = true;
             InvalidateRect(hWnd, 0, TRUE);
             break;
         case IDM_TRIANGLE:
-            bDrawTriangle != bDrawTriangle;
+            bDrawTriangle =true;
             InvalidateRect(hWnd, 0, TRUE);
             break;
         case IDM_SQUARE:
-            bDrawSquare != bDrawSquare;
+            bDrawSquare = true;
             InvalidateRect(hWnd, 0, TRUE);
             break;
         case IDM_EXIT:
@@ -1162,10 +1143,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        // TODO: Add any drawing code that uses hdc here...
-        if (bDrawCircle) circles.addNewShape(300, 200, 92);
-        if (bDrawSquare) boxes.addNewShape(300, 200, 92);
-        if (bDrawTriangle) triangles.addNewShape(300, 200, 92);
         drawBox(hdc, boxes);
         drawCircle(hdc, circles);
         drawTriangle(hdc, triangles);
