@@ -35,6 +35,7 @@ public:
 	int x, y;       //coordinates now
 	const int xMin = 0, xMax = 1000; //range of x
 	const int yMin=0, yMax=250; //range of y
+	int maxMass = 98;
 	bool put;
 	bool canMove(int newX, int newY) {
 		if (newX >= xMin && newX <= xMax && newY >= yMin && newY <= yMax) {
@@ -55,6 +56,14 @@ public:
 			y = newY;
 			return y;
 		}
+	}
+	int setMaxMass(int newMaxMass) {
+		maxMass = newMaxMass;
+		return maxMass;
+	}
+	bool checkMass(int currentMass) {
+		if (currentMass <= maxMass) return true;
+		else return false;
 	}
 };
 
