@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "framework.h"
 #include <vector>
+#include <sstream>
 #include <cstdio>
 #define MAX_LOADSTRING 100
 
