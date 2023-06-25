@@ -30,15 +30,11 @@ char shape;
 bool block = 0;
 
 class RoboHand {
-private:
+public:
 	int x, y;       //coordinates now
-	const int xMin = 0, xMax = 1500; //range of x
+	const int xMin = 0, xMax = 1000; //range of x
 	const int yMin=0, yMax=250; //range of y
 	bool put;
-public:
-	RoboHand(int maxX, int minX, int maxY, int minY) : x(0), y(0), xMax(maxX), xMin(minX), yMax(maxY), yMin(minY) {
-	}
-
 	bool canMove(int newX, int newY) {
 		if (newX >= xMin && newX <= xMax && newY >= yMin && newY <= yMax) {
 			x = newX;
@@ -46,6 +42,18 @@ public:
 			return true;
 		}
 		else return false;
+	}
+	int setX(int newX) {
+		if (canMove(newX, y)) {
+			x = newX;
+			return x;
+		}
+	}
+	int setY(int newY) {
+		if (canMove(x, newY)) {
+			y = newY;
+			return y;
+		}
 	}
 };
 
