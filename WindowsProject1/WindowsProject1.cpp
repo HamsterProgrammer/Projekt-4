@@ -217,7 +217,7 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         boxes.y[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x-5, y))
+    while (x != 75 && hand.canMove(x-5, y))
     {
         x -= 5;
         boxes.x[searching_box] -= 5;
@@ -237,13 +237,13 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100-50 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25 && hand.canMove(x-5, y))
+    while (x != 75 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
         triangles.x[searching_triangle] -= 5;
@@ -269,7 +269,7 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         circles.y[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x-5, y))
+    while (x != 75 && hand.canMove(x-5, y))
     {
         x -= 5;
         circles.x[searching_circle] -= 5;
@@ -344,7 +344,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         circles.y[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x-5, y))
+    while (x != 75 && hand.canMove(x-5, y))
     {
         x -= 5;
         circles.x[searching_circle] -= 5;
@@ -370,7 +370,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         boxes.y[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x, y-5))
+    while (x != 75 && hand.canMove(x, y-5))
     {
         x -= 5;
         boxes.x[searching_box] -= 5;
@@ -390,13 +390,13 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100-50 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25 && hand.canMove(x-5, y))
+    while (x != 75 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
         triangles.x[searching_triangle] -= 5;
