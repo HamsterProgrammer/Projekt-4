@@ -156,171 +156,254 @@ void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, 
 
 void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
-    boxes.x = { 100 };
-    boxes.y = { 200 };
-    triangles.x = { 200 };
-    triangles.y = { 200 };
-    circles.x = { 300 };
-    circles.y = { 200 };
 
-    while (x != boxes.x[0] && hand.canMove(x + 5, y))
+    int searching_circle = 0;
+    int searching_box = 0;
+    int searching_triangle = 0;
+    bool block = 0;
+    for (int g = 0; g < circles.x.size(); g++)
     {
-        x += 5;
-        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+        block = 0;
+        for (int h = 0; h < circles.x.size(); h++)
+        {
+            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_circle = g;
     }
-    while (y != boxes.y[0] && hand.canMove(x, y + 5))
+    for (int g = 0; g < triangles.x.size(); g++)
+    {
+        block = 0;
+        for (int h = 0; h < triangles.x.size(); h++)
+        {
+            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_triangle = g;
+    }
+    for (int g = 0; g < boxes.x.size(); g++)
+    {
+        for (int h = 0; h < boxes.y.size(); h++)
+        {
+            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_box = g;
+    }
+
+
+    while (x != boxes.x[searching_box]+50 && hand.canMove(x + 5, y))
+    {
+            x += 5;
+            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != boxes.y[searching_box] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        boxes.y[0] -= 5;
+        boxes.y[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x - 5, y))
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
-        boxes.x[0] -= 5;
+        boxes.x[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    boxes.y[0] = 200;
+    boxes.y[searching_box] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != triangles.x[0] && hand.canMove(x + 5, y))
+    while (x != triangles.x[searching_triangle] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != triangles.y[0] && hand.canMove(x, y + 5))
+    while (y != triangles.y[searching_triangle] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        triangles.y[0] -= 5;
+        triangles.y[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25 && hand.canMove(x - 5, y))
+    while (x != 20 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
-        triangles.x[0] -= 5;
+        triangles.x[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    triangles.y[0] = 150;
+    triangles.y[searching_triangle] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != circles.x[0] && hand.canMove(x + 5, y))
+    while (x != circles.x[searching_circle]+50 && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != circles.y[0] && hand.canMove(x, y + 5))
+    while (y != circles.y[searching_circle] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        circles.y[0] -= 5;
+        circles.y[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x - 5, y))
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
-        circles.x[0] -= 5;
+        circles.x[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    circles.y[0] = 100;
+    circles.y[searching_circle] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
 void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
     //i'm wondering what's going on
-    while (x != circles.x[0] && hand.canMove(x + 5, y))
+
+    
+    int searching_circle = 0;
+    int searching_box = 0;
+    int searching_triangle = 0;
+    bool block = 0;
+    for (int g = 0; g < circles.x.size(); g++)
+    {
+        block = 0;
+        for (int h = 0; h < circles.x.size(); h++)
+        {
+            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_circle = g;
+    }
+    for (int g = 0; g < triangles.x.size(); g++)
+    {
+        block = 0;
+        for (int h = 0; h < triangles.x.size(); h++)
+        {
+            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_triangle = g;
+    }
+    for (int g = 0; g < boxes.x.size(); g++)
+    {
+        for (int h = 0; h < boxes.y.size(); h++)
+        {
+            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
+            {
+                block = 1;
+            }
+        }
+        if (block == 0)
+            searching_box = g;
+    }
+
+    while (x != circles.x[searching_circle]+50 && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != circles.y[0] && hand.canMove(x, y + 5))
+    while (y != circles.y[searching_circle] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        circles.y[0] -= 5;
+        circles.y[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x - 5, y))
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
-        circles.x[0] -= 5;
+        circles.x[searching_circle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    circles.y[0] = 200;
+    circles.y[searching_circle] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != boxes.x[0] && hand.canMove(x + 5, y))
+    while (x != boxes.x[searching_box]+50 && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != boxes.y[0] && hand.canMove(x, y + 5))
+    while (y != boxes.y[searching_box] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        boxes.y[0] -= 5;
+        boxes.y[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x, y - 5))
+    while (x != 20 && hand.canMove(x, y-5))
     {
         x -= 5;
-        boxes.x[0] -= 5;
+        boxes.x[searching_box] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    boxes.y[0] = 150;
+    boxes.y[searching_box] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-
-    while (x != triangles.x[0] && hand.canMove(x + 5, y))
+    
+    while (x != triangles.x[searching_triangle] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != triangles.y[0] && hand.canMove(x, y + 5))
+    while (y != triangles.y[searching_triangle] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y - 5))
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
-        triangles.y[0] -= 5;
+        triangles.y[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25 && hand.canMove(x - 5, y))
+    while (x != 20 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
-        triangles.x[0] -= 5;
+        triangles.x[searching_triangle] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    triangles.y[0] = 100;
+    triangles.y[searching_triangle] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
