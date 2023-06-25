@@ -41,7 +41,7 @@ void MyOnPaint(HDC hdc, int x, int y)
 
 // zrb wierzchołki ile wierzchołków ma figura i gdzie
 std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kółka sprawdź czy są równe       
-
+/*
 void drawBox(HDC hdc, Shapes boxes)
 {
     Graphics graphics(hdc);
@@ -49,8 +49,30 @@ void drawBox(HDC hdc, Shapes boxes)
     for (int g = 0; g < boxes.x.size(); g++)
         graphics.DrawRectangle(&pen, boxes.x[g], boxes.y[g], 50, 50);
 
-}
+}*/
+void drawBox(HDC hdc, Shapes boxes)
+{
+    Graphics graphics(hdc);
+    Pen pen(Color(255, 255, 0, 0));
+    Font font(L"Arial", 12);
+    SolidBrush brush(Color(255, 0, 0, 0));
 
+    for (int g = 0; g < boxes.x.size(); g++)
+    {
+        int centerX = boxes.x[g] + 25;  // Calculate the x-coordinate of the center of the box
+        int centerY = boxes.y[g] + 25;  // Calculate the y-coordinate of the center of the box
+
+        graphics.DrawRectangle(&pen, boxes.x[g], boxes.y[g], 50, 50);
+
+        std::wstringstream wss;
+        wss << boxes.masa[g];  // Convert integer to wide string using wstringstream
+
+        std::wstring text = wss.str();  // Get the wide string from wstringstream
+
+        graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
+    }
+}
+/*
 void drawTriangle(HDC hdc, Shapes triangles)
 {
     Graphics graphics(hdc);
@@ -69,8 +91,54 @@ void drawCircle(HDC hdc, Shapes circles)
     Pen pen(Color(255, 255, 0, 0));
     for (int g = 0; g < circles.x.size(); g++)
         graphics.DrawArc(&pen, circles.x[g], circles.y[g], 50, 50, 0, 360);
+}*/
+void drawTriangle(HDC hdc, Shapes triangles)
+{
+    Graphics graphics(hdc);
+    Pen pen(Color(255, 255, 0, 0));
+    Font font(L"Arial", 12);
+    SolidBrush brush(Color(255, 0, 0, 0));
+
+    for (int g = 0; g < triangles.x.size(); g++)
+    {
+        graphics.DrawLine(&pen, triangles.x[g], triangles.y[g], triangles.x[g] - 25, triangles.y[g] + 50);
+        graphics.DrawLine(&pen, triangles.x[g], triangles.y[g], triangles.x[g] + 25, triangles.y[g] + 50);
+        graphics.DrawLine(&pen, triangles.x[g] - 25, triangles.y[g] + 50, triangles.x[g] + 25, triangles.y[g] + 50);
+
+        int centerX = (triangles.x[g] + triangles.x[g] - 25 + triangles.x[g] + 25) / 3;
+        int centerY = triangles.y[g]+30; //(triangles.y[g] + triangles.y[g] + triangles.y[g] + 50 + triangles.y[g] + 50) / 3;
+
+        std::wstringstream wss;
+        wss << triangles.masa[g];  // Convert integer to wide string using wstringstream
+
+        std::wstring text = wss.str();  // Get the wide string from wstringstream
+
+        graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
+    }
 }
 
+void drawCircle(HDC hdc, Shapes circles)
+{
+    Graphics graphics(hdc);
+    Pen pen(Color(255, 255, 0, 0));
+    Font font(L"Arial", 12);
+    SolidBrush brush(Color(255, 0, 0, 0));
+
+    for (int g = 0; g < circles.x.size(); g++)
+    {
+        graphics.DrawArc(&pen, circles.x[g], circles.y[g], 50, 50, 0, 360);
+
+        int centerX = circles.x[g] + 25;
+        int centerY = circles.y[g] + 25;
+
+        std::wstringstream wss;
+        wss << circles.masa[g];  // Convert integer to wide string using wstringstream
+
+        std::wstring text = wss.str();  // Get the wide string from wstringstream
+
+        graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
+    }
+}
 
 void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, int y)
 {
