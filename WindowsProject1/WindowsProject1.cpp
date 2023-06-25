@@ -4,16 +4,22 @@ Shapes triangles;
 Shapes boxes;
 Shapes circles;
 
+RoboHand hand;
+
 void firstShapes() {
     triangles.addNewShape(100, 200, 97);
-    triangles.addNewShape(170, 200, 99);
+    triangles.addNewShape(550, 200, 99);
     triangles.addNewShape(300, 200, 92);
-    circles.addNewShape(220, 200, 96);
-    circles.addNewShape(250, 200, 95);
-    circles.addNewShape(420, 200, 93);
+    circles.addNewShape(200, 200, 96);
+    circles.addNewShape(500, 200, 95);
+    circles.addNewShape(800, 200, 93);
     boxes.addNewShape(700, 200, 99);
-    boxes.addNewShape(80, 200, 90);
+    boxes.addNewShape(400, 200, 90);
     boxes.addNewShape(770, 200, 99);
+    //initialization of roboHand (dzwig)
+    hand.x = 20;
+    hand.y = 50;
+    hand.put = false;
 }
 
 
@@ -25,8 +31,12 @@ void MyOnPaint(HDC hdc, int x, int y)
 {
     Graphics graphics(hdc);
     Pen pen(Color(255, 0, 0, 255));
-    graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd że współrzędne zależa od tego jak przytrzymasz czy inny chuj i jeśli 
-    // coś się zetknie czycos to sie klei do sb albo jak sie kliknie współ. sie zapisuja itp itd
+    if (hand.canMove(x, y)) {
+        hand.setX(x);
+        hand.setY(y);
+        graphics.DrawLine(&pen, hand.x, 10, hand.x, hand.y);      // rysuj xyz tu bd że współrzędne zależa od tego jak przytrzymasz czy inny chuj i jeśli 
+        // coś się zetknie czycos to sie klei do sb albo jak sie kliknie współ. sie zapisuja itp itd
+    }
 }
 
 // zrb wierzchołki ile wierzchołków ma figura i gdzie
@@ -84,28 +94,24 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     triangles.y = { 200 };
     circles.x = { 300 };
     circles.y = { 200 };
-    //where is the problem? let`s find out
-    while (x != boxes.x[0])
- //  while(x<1000)
+
+    while (x != boxes.x[0] && hand.canMove(x + 5, y))
     {
-     //   if (x != boxes_x[0]) {
             x += 5;
             repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-      //  }
-        //else continue;
     }
-    while (y != boxes.y[0])
+    while (y != boxes.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         boxes.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20)
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
         boxes.x[0] -= 5;
@@ -115,31 +121,23 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     boxes.y[0] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != triangles.x[0])
+    while (x != triangles.x[0] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-   /* while (x < 1000)
-    {
-        if (x != triangles_x[0]) {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-        }
-        else continue;
-    }*/
-    while (y != triangles.y[0])
+    while (y != triangles.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25)
+    while (x != 20 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
         triangles.x[0] -= 5;
@@ -149,31 +147,23 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     triangles.y[0] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != circles.x[0])
+    while (x != circles.x[0] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-        /* while (x < 1000)
-    {
-        if (x != circles_x[0]) {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-        }
-        else continue;
-    }*/
-    while (y != circles.y[0])
+    while (y != circles.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         circles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20)
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
         circles.x[0] -= 5;
@@ -187,31 +177,23 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
 void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
     //i'm wondering what's going on
-    while (x != circles.x[0])
+    while (x != circles.x[0] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-   /* while (x < 1000)
-    {
-        if (x != circles_x[0]) {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-        }
-        else continue;
-    }*/
-    while (y != circles.y[0])
+    while (y != circles.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         circles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20)
+    while (x != 20 && hand.canMove(x-5, y))
     {
         x -= 5;
         circles.x[0] -= 5;
@@ -221,31 +203,23 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     circles.y[0] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != boxes.x[0])
+    while (x != boxes.x[0] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-   /* while (x < 1000)
-    {
-        if (x != boxes_x[0]) {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-        }
-        else continue;
-    }*/
-    while (y != boxes.y[0])
+    while (y != boxes.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         boxes.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20)
+    while (x != 20 && hand.canMove(x, y-5))
     {
         x -= 5;
         boxes.x[0] -= 5;
@@ -255,31 +229,23 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     boxes.y[0] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     
-    while (x != triangles.x[0])
+    while (x != triangles.x[0] && hand.canMove(x+5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-  /*  while (x < 1000)
-    {
-        if (x != triangles_x[0]) {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-        }
-        else continue;
-    }*/
-    while (y != triangles.y[0])
+    while (y != triangles.y[0] && hand.canMove(x, y+5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100)
+    while (y != 100 && hand.canMove(x, y-5))
     {
         y -= 5;
         triangles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25)
+    while (x != 20 + 25 && hand.canMove(x-5, y))
     {
         x -= 5;
         triangles.x[0] -= 5;
@@ -451,7 +417,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
         case VK_LEFT:
             block = 0;
-            if (picked_up == 1 and shape == 's')
+            if (picked_up == 1 and shape == 's' && hand.canMove(x-5, y))
             {
                 for (int g = 0; g < boxes.x.size(); g++)
                 {
@@ -475,7 +441,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     boxes.x[pickme] -= 5;
                 }
             }
-            if (picked_up == 1 and shape == 'c')
+            if (picked_up == 1 and shape == 'c' && hand.canMove(x-5, y))
             {
                 for (int g = 0; g < circles.x.size(); g++)
                 {
@@ -499,7 +465,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     circles.x[pickme] -= 5;
                 }
             }
-            if (picked_up == 1 and shape == 't')
+            if (picked_up == 1 and shape == 't' && hand.canMove(x-5, y))
             {
                 for (int g = 0; g < circles.x.size(); g++)
                 {
@@ -520,20 +486,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             block = 1;
                     }
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x-5, y))
                 {
                     x = x - 5;
                     triangles.x[pickme] -= 5;
                 }
             }
-            if (picked_up == 0)
-                x = x - 5;
+            if (picked_up == 0) {
+                if (hand.canMove(x-5, y))
+                    x = x - 5;
+            }
+            else x = x;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
 
         case VK_RIGHT:
             block = 0;
-            if (picked_up == 1 and shape == 's')
+            if (picked_up == 1 and shape == 's' && hand.canMove(x+5, y))
             {
                 for (int g = 0; g < boxes.x.size(); g++)
                 {
@@ -557,7 +526,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     boxes.x[pickme] += 5;
                 }
             }
-            if (picked_up == 1 and shape == 'c')
+            if (picked_up == 1 and shape == 'c' && hand.canMove(x+5, y))
             {
                 for (int g = 0; g < circles.x.size(); g++)
                 {
@@ -581,7 +550,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     circles.x[pickme] += 5;
                 }
             }
-            if (picked_up == 1 and shape == 't')
+            if (picked_up == 1 and shape == 't' && hand.canMove(x+5, y))
             {
                 for (int g = 0; g < circles.x.size(); g++)
                 {
@@ -618,26 +587,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     triangles.x[pickme] += 5;
                 }
             }
-            if (picked_up == 0)
+            if (picked_up == 0 && hand.canMove(x+5, y))
                 x = x + 5;
+            else x = x;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
 
         case VK_UP:
-            if (y > 15)
+            if (y > 15 && hand.canMove(x, y))
                 y = y - 5;
-            if (picked_up == 1 and shape == 's')
+            if (picked_up == 1 and shape == 's' && hand.canMove(x, y-5))
                 boxes.y[pickme] -= 5;
-            if (picked_up == 1 and shape == 'c')
+            if (picked_up == 1 and shape == 'c' && hand.canMove(x, y-5))
                 circles.y[pickme] -= 5;
-            if (picked_up == 1 and shape == 't')
+            if (picked_up == 1 and shape == 't' && hand.canMove(x, y-5))
                 triangles.y[pickme] -= 5;
+            else y = y;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
 
         case VK_DOWN:// nie ma hitboxa dokończonego
             block = 0;
-            if (picked_up == 1 and shape == 's')
+            if (picked_up == 1 and shape == 's' && hand.canMove(x, y+5))
             {
                 for (int g = 0; g < boxes.x.size(); g++)
                 {
@@ -673,7 +644,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     boxes.y[pickme] += 5;
                 }
             }
-            if (picked_up == 1 and shape == 'c')
+            if (picked_up == 1 and shape == 'c' && hand.canMove(x, y+5))
             {
                 for (int g = 0; g < boxes.x.size(); g++)
                 {
@@ -709,7 +680,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     circles.y[pickme] += 5;
                 }
             }
-            if (picked_up == 1 and shape == 't')
+            if (picked_up == 1 and shape == 't' && hand.canMove(x, y+5))
             {
                 for (int g = 0; g < boxes.x.size(); g++)
                 {
@@ -745,12 +716,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     }
                 }
             }
-            if (picked_up == 0)
+            if (picked_up == 0 && hand.canMove(x, y+5))
                 y = y + 5;
-
+            else y = y;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
-
         case VK_END:
             boxes.x.push_back(200);
             boxes.y.push_back(200);
