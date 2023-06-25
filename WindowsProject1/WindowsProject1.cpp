@@ -805,15 +805,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= circles.x[g] and x <= circles.x[g] + 50)
                     {
                     bool pod_spodem = 0;
-                        for (int h = 0; h < circles_x.size(); h++)
+                        for (int h = 0; h < circles.x.size(); h++)
                         {
-                            if (circles_y[g] - 50 == circles_y[h] and circles_x[g] + 50 > circles_x[h] and circles_x[g] < circles_x[h] + 50)
+                            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
                             {
                                 pod_spodem = 1;
                             }
                         }
 
-                        if (picked_up == 0 and circles_masa[g]<100 and pod_spodem == 0)
+                        if (picked_up == 0 and circles.masa[g]<100 and pod_spodem == 0)
                         {
                             pickme = g;
                             picked_up = 1;
@@ -897,14 +897,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= boxes.x[g] and x <= boxes.x[g] + 50)
                     {
                         bool pod_spodem = 0;
-                        for (int h = 0; h < boxes_x.size(); h++)
+                        for (int h = 0; h < boxes.x.size(); h++)
                         {
-                            if (boxes_y[g] - 50 == boxes_y[h] and boxes_x[g] + 50 > boxes_x[h] and boxes_x[g] < boxes_x[h] + 50)
+                            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
                             {
                                 pod_spodem = 1;
                             }
                         }
-                        if (picked_up == 0 and boxes_masa[g] < 100 and pod_spodem == 0)
+                        if (picked_up == 0 and boxes.masa[g] < 100 and pod_spodem == 0)
                         {
                             pickme = g;
                             picked_up = 1;
@@ -987,14 +987,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= triangles.x[g] - szer and x <= triangles.x[g] + szer)
                     {
                     bool pod_spodem = 0;
-                        for (int h = 0; h < triangles_x.size(); h++)
+                        for (int h = 0; h < triangles.x.size(); h++)
                         {
-                            if (triangles_y[g] - 50 == triangles_y[h] and triangles_x[g] + 25 > triangles_x[h]-25 and triangles_x[g]-25 < triangles_x[h] + 25)
+                            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h]-25 and triangles.x[g]-25 < triangles.x[h] + 25)
                             {
                                 pod_spodem = 1;
                             }
                         }
-                        if (picked_up == 0 and triangles_masa[g] < 100 and pod_spodem == 0)
+                        if (picked_up == 0 and triangles.masa[g] < 100 and pod_spodem == 0)
                         {
                             pickme = g;
                             picked_up = 1;
