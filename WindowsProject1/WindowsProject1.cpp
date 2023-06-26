@@ -270,12 +270,15 @@ void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
 
 void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
-    while (x != circles.x[0] && hand.canMove(x + 5, y))
+    int gB = chooseRandomShape(boxes);
+    int gC = chooseRandomShape(circles);
+    int gT = chooseRandomShape(triangles);
+    while (x != circles.x[gC] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != circles.y[0] && hand.canMove(x, y + 5))
+    while (y != circles.y[gC] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
@@ -283,25 +286,25 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        circles.y[0] -= 5;
+        circles.y[gC] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
     while (x != 20 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        circles.x[0] -= 5;
+        circles.x[gC] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    circles.y[0] = 200;
+    circles.y[gC] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != boxes.x[0] && hand.canMove(x + 5, y))
+    while (x != boxes.x[gB] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != boxes.y[0] && hand.canMove(x, y + 5))
+    while (y != boxes.y[gB] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
@@ -309,25 +312,25 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        boxes.y[0] -= 5;
+        boxes.y[gB] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
     while (x != 20 && hand.canMove(x, y - 5))
     {
         x -= 5;
-        boxes.x[0] -= 5;
+        boxes.x[gB] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    boxes.y[0] = 150;
+    boxes.y[gB] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != triangles.x[0] && hand.canMove(x + 5, y))
+    while (x != triangles.x[gT] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != triangles.y[0] && hand.canMove(x, y + 5))
+    while (y != triangles.y[gT] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
@@ -335,17 +338,17 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
     while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        triangles.y[0] -= 5;
+        triangles.y[gT] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
     while (x != 20 + 25 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        triangles.x[0] -= 5;
+        triangles.x[gT] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    triangles.y[0] = 100;
+    triangles.y[gT] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
@@ -499,6 +502,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             hand.stanC = false;
             hand.stanT = false;
             break;
+        case IDM_ONLYBOXES:
+            hand.stanB = true;
+            hand.stanC = false;
+            hand.stanT = false;
+            break;
+        case IDM_ONLYCIRCLES:
+            hand.stanC = true;
+            hand.stanB = false;
+            hand.stanT = false;
+            break;        
+        case IDM_ONLYTRIANGLES:
+            hand.stanT = true;
+            hand.stanB = false;
+            hand.stanC = false;
+            break;
         case IDM_TOWERCBT:
             make_tower_2(hWnd, hdc, ps, NULL, x, y);
             break;
@@ -512,7 +530,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (result == IDOK)
             {
                 // Handle the OK button click in the dialog
-                // Retrieve the mass value from the dialog and use it as needed
+                // You can perform any additional actions here if needed
             }
             break;
         }
@@ -851,14 +869,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 {
                     if (x >= circles.x[g] and x <= circles.x[g] + 50)
                     {
-                        bool pod_spodem = 0;
-                        for (int h = 0; h < circles.x.size(); h++)
+                        bool pod_spodem = under_smth(circles, g);
+                        /*for (int h = 0; h < circles.x.size(); h++)
                         {
                             if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
                             {
                                 pod_spodem = 1;
                             }
-                        }
+                        }*/
+
                         if (picked_up == 0 and hand.checkMass(circles.masa[g]) and pod_spodem == 0)
                         {
                             pickme = g;
@@ -941,14 +960,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 {
                     if (x >= boxes.x[g] and x <= boxes.x[g] + 50)
                     {
-                        bool pod_spodem = 0;
-                        for (int h = 0; h < boxes.x.size(); h++)
-                        {
-                            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
-                            {
-                                pod_spodem = 1;
-                            }
-                        }
+                        bool pod_spodem = under_smth(boxes, g);
                         if (picked_up == 0 and hand.checkMass(boxes.masa[g]) and pod_spodem == 0)
                         {
                             pickme = g;
@@ -1031,14 +1043,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     int szer = (y - triangles.y[g]) / 2;
                     if (x >= triangles.x[g] - szer and x <= triangles.x[g] + szer)
                     {
-                        bool pod_spodem = 0;
-                        for (int h = 0; h < triangles.x.size(); h++)
-                        {
-                            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
-                            {
-                                pod_spodem = 1;
-                            }
-                        }
+                        bool pod_spodem = under_smth(triangles, g);
+                        //for (int h = 0; h < triangles.x.size(); h++)
+                        //{
+                        //    if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
+                        //    {
+                        //        pod_spodem = 1;
+                        //    }
+                        //}
                         if (picked_up == 0 and hand.checkMass(triangles.masa[g]) and pod_spodem == 0)
                         {
                             pickme = g;
@@ -1160,35 +1172,38 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
-INT_PTR CALLBACK SetMassDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+
+static INT_PTR CALLBACK SetMassDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
+    switch (uMsg)
     {
     case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+
+        return TRUE;
 
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
         case IDOK:
         {
-            // Handle the OK button click
-            // Retrieve the mass value from the dialog
-            TCHAR buffer[256];
-            GetDlgItemText(hDlg, IDC_MASS_EDIT, buffer, sizeof(buffer));
-            int massValue = _ttoi(buffer);
-            hand.setMaxMass(massValue);
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
+            HWND hMassEdit = GetDlgItem(hwndDlg, IDC_MASS_EDIT);
+            wchar_t massText[256];
+            GetWindowTextW(hMassEdit, massText, sizeof(massText) / sizeof(massText[0]));
+
+            int newMaxMass = _wtoi(massText);
+
+            hand.setMaxMass(newMaxMass);
+
+            EndDialog(hwndDlg, IDOK);
+            return TRUE;
         }
 
         case IDCANCEL:
-            // Handle the Cancel button click
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
+            EndDialog(hwndDlg, IDCANCEL);
+            return TRUE;
         }
         break;
     }
 
-    return (INT_PTR)FALSE;
+    return FALSE;
 }
