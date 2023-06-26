@@ -4,6 +4,9 @@
 #include <vector>
 #include <sstream>
 #include <cstdio>
+#include <cstdlib> 
+#include <random>
+#include <ctime>   
 #define MAX_LOADSTRING 100
 
 bool bDrawTriangle = false;
@@ -21,6 +24,8 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+INT_PTR CALLBACK SetMassDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
 HWND hwndButton;
 int x = 20;
 int y = 100;
@@ -37,6 +42,9 @@ public:
 	const int yMin=0, yMax=250; //range of y
 	int maxMass = 98;
 	bool put;
+	bool stanB;
+	bool stanT;
+	bool stanC;
 	bool canMove(int newX, int newY) {
 		if (newX >= xMin && newX <= xMax && newY >= yMin && newY <= yMax) {
 			x = newX;
