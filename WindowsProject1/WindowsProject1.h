@@ -4,9 +4,8 @@
 #include <vector>
 #include <sstream>
 #include <cstdio>
-#include <cstdlib> 
-#include <random>
-#include <ctime>   
+#include <random> 
+#include <windows.h>
 #define MAX_LOADSTRING 100
 
 bool bDrawTriangle = false;
@@ -24,7 +23,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-INT_PTR CALLBACK SetMassDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+static INT_PTR CALLBACK SetMassDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HWND hwndButton;
 int x = 20;
@@ -73,6 +72,7 @@ public:
 		if (currentMass <= maxMass) return true;
 		else return false;
 	}
+
 };
 
 class Shapes {
