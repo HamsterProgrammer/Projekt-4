@@ -13,7 +13,7 @@ void firstShapes() {
     circles.addNewShape(200, 200, 96);
     circles.addNewShape(500, 200, 95);
     circles.addNewShape(800, 200, 93);
-    boxes.addNewShape(700, 200, 99);
+    boxes.addNewShape(700, 200, 96);
     boxes.addNewShape(400, 200, 90);
     boxes.addNewShape(770, 200, 99);
     //initialization of roboHand (dzwig)
@@ -22,6 +22,23 @@ void firstShapes() {
     hand.put = false;
 }
 
+int getRandomMass() {
+    std::random_device rd;
+    std::mt19937 engine(rd());
+    std::uniform_int_distribution<int> dist(0, 150);
+    int randomNumber = dist(engine);
+
+    return randomNumber;
+}
+
+int getRandomNumber() {
+    std::random_device rd;
+    std::mt19937 engine(rd());
+    std::uniform_int_distribution<int> dist(0, 1000);
+    int randomNumber = dist(engine);
+
+    return randomNumber;
+}
 
 /*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
 żeby sprawdzało czy jest trójkątem, kwadratem ... to bd funkcja sprawdzająca czy jest którąś z tych 3 to oddaje wartość true i może sprawdzać czy x znajduje się
@@ -49,25 +66,24 @@ void drawBox(HDC hdc, Shapes &boxes)
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
     if (bDrawSquare) {
-        boxes.addNewShape(300, 200, 92);
+        boxes.addNewShape(getRandomNumber(), 200, getRandomMass());
         bDrawSquare = false;
     }
     for (int g = 0; g < boxes.x.size(); g++)
     {
-        int centerX = boxes.x[g] + 25;  // Calculate the x-coordinate of the center of the box
-        int centerY = boxes.y[g] + 25;  // Calculate the y-coordinate of the center of the box
+        int centerX = boxes.x[g] + 25; 
+        int centerY = boxes.y[g] + 25; 
 
         graphics.DrawRectangle(&pen, boxes.x[g], boxes.y[g], 50, 50);
 
         std::wstringstream wss;
-        wss << boxes.masa[g];  // Convert integer to wide string using wstringstream
+        wss << boxes.masa[g];  
 
-        std::wstring text = wss.str();  // Get the wide string from wstringstream
+        std::wstring text = wss.str(); 
 
         graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
     }
 }
-
 void drawTriangle(HDC hdc, Shapes &triangles)
 {
     Graphics graphics(hdc);
@@ -75,7 +91,7 @@ void drawTriangle(HDC hdc, Shapes &triangles)
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
     if (bDrawTriangle) {
-        triangles.addNewShape(710, 200, 92);
+        triangles.addNewShape(getRandomNumber(), 200, getRandomMass());
         bDrawTriangle = false;
     }
     for (int g = 0; g < triangles.x.size(); g++)
@@ -85,12 +101,12 @@ void drawTriangle(HDC hdc, Shapes &triangles)
         graphics.DrawLine(&pen, triangles.x[g] - 25, triangles.y[g] + 50, triangles.x[g] + 25, triangles.y[g] + 50);
 
         int centerX = (triangles.x[g] + triangles.x[g] - 25 + triangles.x[g] + 25) / 3;
-        int centerY = triangles.y[g] + 30; //(triangles.y[g] + triangles.y[g] + triangles.y[g] + 50 + triangles.y[g] + 50) / 3;
+        int centerY = triangles.y[g] + 30; 
 
         std::wstringstream wss;
-        wss << triangles.masa[g];  // Convert integer to wide string using wstringstream
+        wss << triangles.masa[g];  
 
-        std::wstring text = wss.str();  // Get the wide string from wstringstream
+        std::wstring text = wss.str();  
 
         graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
     }
@@ -103,7 +119,7 @@ void drawCircle(HDC hdc, Shapes &circles)
     Font font(L"Arial", 12);
     SolidBrush brush(Color(255, 0, 0, 0));
     if (bDrawCircle) {
-        circles.addNewShape(420, 200, 92);
+        circles.addNewShape(getRandomNumber(), 200, getRandomMass());
         bDrawCircle = false;
     }
     for (int g = 0; g < circles.x.size(); g++)
@@ -114,9 +130,9 @@ void drawCircle(HDC hdc, Shapes &circles)
         int centerY = circles.y[g] + 25;
 
         std::wstringstream wss;
-        wss << circles.masa[g];  // Convert integer to wide string using wstringstream
+        wss << circles.masa[g];  
 
-        std::wstring text = wss.str();  // Get the wide string from wstringstream
+        std::wstring text = wss.str(); 
 
         graphics.DrawString(text.c_str(), -1, &font, PointF(centerX, centerY), &brush);
     }
@@ -136,256 +152,200 @@ void repaintWindow(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int x, 
     EndPaint(hWnd, &ps);
 }
 
+bool under_smth(Shapes shape, int id) {
+    for (int i = 0; i < boxes.x.size(); i++) {
+        if ((shape.x[id] == boxes.x[i]) || (shape.x[id] + 50 >= boxes.x[i] && shape.x[id] <= boxes.x[i]) || (shape.x[id] >= boxes.x[i] && shape.x[id] <= boxes.x[i] + 50)) {
+            if (shape.y[id] > boxes.y[i])
+                return true;
+        }
+    }
+    for (int i = 0; i < circles.x.size(); i++) {
+        if ((shape.x[id] == circles.x[i]) || (shape.x[id] + 50 >= circles.x[i] && shape.x[id] <= circles.x[i]) || (shape.x[id] >= circles.x[i] && shape.x[id] <= circles.x[i] + 50)) {
+            if (shape.y[id] > circles.y[i])
+                return true;
+        }
+    }
+    for (int i = 0; i < triangles.x.size(); i++) {
+        if ((shape.x[id] == triangles.x[i]) || (shape.x[id] + 50 >= triangles.x[i] && shape.x[id] <= triangles.x[i]) || (shape.x[id] >= triangles.x[i] && shape.x[id] <= triangles.x[i] + 50)) {
+            if (shape.y[id] > triangles.y[i])
+                return true;
+        }
+    }
+    return false;
+}
+
+int chooseRandomShape(Shapes shape) {
+    //check mass, under_smth or not
+    for (int i = 0; i < shape.x.size(); i++) {
+        if (under_smth(shape, i)) continue;
+        else if (hand.checkMass(circles.masa[i])) {
+            return i;
+        }
+    }
+}
+
 void make_tower_1(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
-
-    int searching_circle = 0;
-    int searching_box = 0;
-    int searching_triangle = 0;
-    bool block = 0;
-    for (int g = 0; g < circles.x.size(); g++)
-    {
-        block = 0;
-        for (int h = 0; h < circles.x.size(); h++)
-        {
-            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_circle = g;
-    }
-    for (int g = 0; g < triangles.x.size(); g++)
-    {
-        block = 0;
-        for (int h = 0; h < triangles.x.size(); h++)
-        {
-            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_triangle = g;
-    }
-    for (int g = 0; g < boxes.x.size(); g++)
-    {
-        for (int h = 0; h < boxes.y.size(); h++)
-        {
-            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_box = g;
-    }
-
-
-    while (x != boxes.x[searching_box]+50 && hand.canMove(x + 5, y))
-    {
-            x += 5;
-            repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-    }
-    while (y != boxes.y[searching_box] && hand.canMove(x, y+5))
-    {
-        y += 5;
-        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-    }
-    while (y != 100 && hand.canMove(x, y-5))
-    {
-        y -= 5;
-        boxes.y[searching_box] -= 5;
-        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-    }
-    while (x != 75 && hand.canMove(x-5, y))
-    {
-        x -= 5;
-        boxes.x[searching_box] -= 5;
-        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-    }
-
-    boxes.y[searching_box] = 200;
-    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-
-    while (x != triangles.x[searching_triangle] && hand.canMove(x+5, y))
+    int gB = chooseRandomShape(boxes);
+    int gC = chooseRandomShape(circles);
+    int gT = chooseRandomShape(triangles);
+    while (x != boxes.x[gB] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != triangles.y[searching_triangle] && hand.canMove(x, y+5))
+    while (y != boxes.y[gB] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        triangles.y[searching_triangle] -= 5;
+        boxes.y[gB] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 75 + 25 && hand.canMove(x-5, y))
+    while (x != 20 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        triangles.x[searching_triangle] -= 5;
+        boxes.x[gB] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    triangles.y[searching_triangle] = 150;
+    boxes.y[gB] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != circles.x[searching_circle]+50 && hand.canMove(x+5, y))
+    while (x != triangles.x[gT] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != circles.y[searching_circle] && hand.canMove(x, y+5))
+    while (y != triangles.y[gT] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        circles.y[searching_circle] -= 5;
+        triangles.y[gT] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 75 && hand.canMove(x-5, y))
+    while (x != 20 + 25 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        circles.x[searching_circle] -= 5;
+        triangles.x[gT] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    circles.y[searching_circle] = 100;
+    triangles.y[gT] = 150;
+    repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+
+    while (x != circles.x[gC] && hand.canMove(x + 5, y))
+    {
+        x += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != circles.y[gC] && hand.canMove(x, y + 5))
+    {
+        y += 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (y != 100 && hand.canMove(x, y - 5))
+    {
+        y -= 5;
+        circles.y[gC] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+    while (x != 20 && hand.canMove(x - 5, y))
+    {
+        x -= 5;
+        circles.x[gC] -= 5;
+        repaintWindow(hWnd, hdc, ps, drawArea, x, y);
+    }
+
+    circles.y[gC] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
 void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, int& y)
 {
-    //i'm wondering what's going on
-
-    
-    int searching_circle = 0;
-    int searching_box = 0;
-    int searching_triangle = 0;
-    bool block = 0;
-    for (int g = 0; g < circles.x.size(); g++)
-    {
-        block = 0;
-        for (int h = 0; h < circles.x.size(); h++)
-        {
-            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_circle = g;
-    }
-    for (int g = 0; g < triangles.x.size(); g++)
-    {
-        block = 0;
-        for (int h = 0; h < triangles.x.size(); h++)
-        {
-            if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_triangle = g;
-    }
-    for (int g = 0; g < boxes.x.size(); g++)
-    {
-        for (int h = 0; h < boxes.y.size(); h++)
-        {
-            if (boxes.y[g] - 50 == boxes.y[h] and boxes.x[g] + 50 > boxes.x[h] and boxes.x[g] < boxes.x[h] + 50)
-            {
-                block = 1;
-            }
-        }
-        if (block == 0)
-            searching_box = g;
-    }
-
-    while (x != circles.x[searching_circle]+50 && hand.canMove(x+5, y))
+    while (x != circles.x[0] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != circles.y[searching_circle] && hand.canMove(x, y+5))
+    while (y != circles.y[0] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        circles.y[searching_circle] -= 5;
+        circles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 75 && hand.canMove(x-5, y))
+    while (x != 20 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        circles.x[searching_circle] -= 5;
+        circles.x[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    circles.y[searching_circle] = 200;
+    circles.y[0] = 200;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 
-    while (x != boxes.x[searching_box]+50 && hand.canMove(x+5, y))
+    while (x != boxes.x[0] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != boxes.y[searching_box] && hand.canMove(x, y+5))
+    while (y != boxes.y[0] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        boxes.y[searching_box] -= 5;
+        boxes.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 75 && hand.canMove(x, y-5))
+    while (x != 20 && hand.canMove(x, y - 5))
     {
         x -= 5;
-        boxes.x[searching_box] -= 5;
+        boxes.x[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    boxes.y[searching_box] = 150;
+    boxes.y[0] = 150;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
-    
-    while (x != triangles.x[searching_triangle] && hand.canMove(x+5, y))
+
+    while (x != triangles.x[0] && hand.canMove(x + 5, y))
     {
         x += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != triangles.y[searching_triangle] && hand.canMove(x, y+5))
+    while (y != triangles.y[0] && hand.canMove(x, y + 5))
     {
         y += 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (y != 100 && hand.canMove(x, y-5))
+    while (y != 100 && hand.canMove(x, y - 5))
     {
         y -= 5;
-        triangles.y[searching_triangle] -= 5;
+        triangles.y[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 75 + 25 && hand.canMove(x-5, y))
+    while (x != 20 + 25 && hand.canMove(x - 5, y))
     {
         x -= 5;
-        triangles.x[searching_triangle] -= 5;
+        triangles.x[0] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
 
-    triangles.y[searching_triangle] = 100;
+    triangles.y[0] = 100;
     repaintWindow(hWnd, hdc, ps, drawArea, x, y);
 }
 
@@ -397,7 +357,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     firstShapes();
-    // TODO: Place code here.
 
     GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR           gdiplusToken;
@@ -535,6 +494,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             bDrawSquare = true;
             InvalidateRect(hWnd, 0, TRUE);
             break;
+        case IDM_NOLIMITS:
+            hand.stanB = false;
+            hand.stanC = false;
+            hand.stanT = false;
+            break;
+        case IDM_TOWERCBT:
+            make_tower_2(hWnd, hdc, ps, NULL, x, y);
+            break;
+        case IDM_TOWERBCT:
+            make_tower_1(hWnd, hdc, ps, NULL, x, y);
+            break;
+        case IDM_SETMASS:
+        {
+            // Show the Set Mass dialog
+            INT_PTR result = DialogBox(hInst, MAKEINTRESOURCE(IDD_SET_MASS_DIALOG), hWnd, SetMassDialogProc);
+            if (result == IDOK)
+            {
+                // Handle the OK button click in the dialog
+                // Retrieve the mass value from the dialog and use it as needed
+            }
+            break;
+        }
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
@@ -860,8 +841,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case VK_DELETE:
             make_tower_2(hWnd, hdc, ps, NULL, x, y);
+            break;
         case 0x0D:
             //kółka 
+            if(!hand.stanB && !hand.stanT)
             for (int g = 0; g < circles.x.size(); g++)
             {
                 if (y > circles.y[g] and y < circles.y[g] + 50)
@@ -876,7 +859,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                                 pod_spodem = 1;
                             }
                         }
-
                         if (picked_up == 0 and hand.checkMass(circles.masa[g]) and pod_spodem == 0)
                         {
                             pickme = g;
@@ -929,7 +911,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             //kwadraty
                             for (int h = 0; h < boxes.y.size(); h++)
                             {
-
                                 if (circles.x[g] + 50 >= boxes.x[h] and circles.x[g] <= boxes.x[h] + 50)
                                 {
                                     picked_up = 1;
@@ -939,7 +920,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             //trójkąty
                             for (int h = 0; h < triangles.y.size(); h++)
                             {
-
                                 if (circles.x[g] <= triangles.x[h] and circles.x[g] >= triangles.x[h] - 50)
                                 {
                                     picked_up = 1;
@@ -954,6 +934,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
             }
             // kwadraty
+            if(!hand.stanC && !hand.stanT)
             for (int g = 0; g < boxes.x.size(); g++)
             {
                 if (y > boxes.y[g] and y < boxes.y[g] + 50)
@@ -1028,7 +1009,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             //trójkąt
                             for (int h = 0; h < triangles.y.size(); h++)
                             {
-
                                 if (boxes.x[g] <= triangles.x[h] and boxes.x[g] >= triangles.x[h] - 50)
                                 {
                                     picked_up = 1;
@@ -1043,6 +1023,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
             }
             //trójkąty
+            if(!hand.stanC && !hand.stanC)
             for (int g = 0; g < triangles.x.size(); g++)
             {
                 if (y > triangles.y[g] and y < triangles.y[g] + 50)
@@ -1160,6 +1141,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 // Message handler for about box.
+
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -1176,5 +1158,37 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
+    return (INT_PTR)FALSE;
+}
+INT_PTR CALLBACK SetMassDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case IDOK:
+        {
+            // Handle the OK button click
+            // Retrieve the mass value from the dialog
+            TCHAR buffer[256];
+            GetDlgItemText(hDlg, IDC_MASS_EDIT, buffer, sizeof(buffer));
+            int massValue = _ttoi(buffer);
+            hand.setMaxMass(massValue);
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+
+        case IDCANCEL:
+            // Handle the Cancel button click
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+
     return (INT_PTR)FALSE;
 }
