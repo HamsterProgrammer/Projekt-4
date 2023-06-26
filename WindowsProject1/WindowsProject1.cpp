@@ -20,6 +20,10 @@ void firstShapes() {
     hand.x = 20;
     hand.y = 50;
     hand.put = false;
+
+    hand.stanB = false;
+    hand.stanC = false;
+    hand.stanT = false;
 }
 
 int getRandomMass() {
@@ -27,7 +31,7 @@ int getRandomMass() {
     std::mt19937 engine(rd());
     std::uniform_int_distribution<int> dist(0, 150);
     int randomNumber = dist(engine);
-
+    if (randomNumber < 40) randomNumber = 2 * randomNumber;
     return randomNumber;
 }
 
@@ -39,11 +43,6 @@ int getRandomNumber() {
 
     return randomNumber;
 }
-
-/*zmienić żeby nie było triangle_x itd wszystko zapisuje się w boxes i jak chce się stworzyć trójkąt to po prostu się odp funkcja wczyta
-żeby sprawdzało czy jest trójkątem, kwadratem ... to bd funkcja sprawdzająca czy jest którąś z tych 3 to oddaje wartość true i może sprawdzać czy x znajduje się
-w tych figurach aby je podnieśći mamy pierwsze 3 gotowe później dodać sprawdzanie masy(może pokazywanie jej?) i mamy 4 to śmieszne budowanie to idk */
-
 void MyOnPaint(HDC hdc, int x, int y)
 {
     Graphics graphics(hdc);
@@ -51,13 +50,10 @@ void MyOnPaint(HDC hdc, int x, int y)
     if (hand.canMove(x, y)) {
         hand.setX(x);
         hand.setY(y);
-        graphics.DrawLine(&pen, hand.x, 10, hand.x, hand.y);      // rysuj xyz tu bd że współrzędne zależa od tego jak przytrzymasz czy inny chuj i jeśli 
-        // coś się zetknie czycos to sie klei do sb albo jak sie kliknie współ. sie zapisuja itp itd
+        graphics.DrawLine(&pen, hand.x, 10, hand.x, hand.y);      
     }
 }
-
-// zrb wierzchołki ile wierzchołków ma figura i gdzie
-std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kółka sprawdź czy są równe       
+std::vector<int> wierzcholki{ {4} };     
 
 void drawBox(HDC hdc, Shapes &boxes)
 {
@@ -289,7 +285,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         circles.y[gC] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x - 5, y))
+    while (x != 60 && hand.canMove(x - 5, y))
     {
         x -= 5;
         circles.x[gC] -= 5;
@@ -315,7 +311,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         boxes.y[gB] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 && hand.canMove(x, y - 5))
+    while (x != 60 && hand.canMove(x, y - 5))
     {
         x -= 5;
         boxes.x[gB] -= 5;
@@ -341,7 +337,7 @@ void make_tower_2(HWND hWnd, HDC& hdc, PAINTSTRUCT& ps, RECT* drawArea, int& x, 
         triangles.y[gT] -= 5;
         repaintWindow(hWnd, hdc, ps, drawArea, x, y);
     }
-    while (x != 20 + 25 && hand.canMove(x - 5, y))
+    while (x != 60 + 25 && hand.canMove(x - 5, y))
     {
         x -= 5;
         triangles.x[gT] -= 5;
@@ -474,7 +470,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
-        // Parse the menu selections:
         switch (wmId)
         {
         case ID_BUTTON:
@@ -502,21 +497,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             hand.stanC = false;
             hand.stanT = false;
             break;
-        case IDM_ONLYBOXES:
-            hand.stanB = true;
-            hand.stanC = false;
-            hand.stanT = false;
-            break;
-        case IDM_ONLYCIRCLES:
-            hand.stanC = true;
-            hand.stanB = false;
-            hand.stanT = false;
-            break;        
-        case IDM_ONLYTRIANGLES:
-            hand.stanT = true;
-            hand.stanB = false;
-            hand.stanC = false;
-            break;
+        //case IDM_ONLYBOXES:   
+        //    hand.stanB = true;
+        //    hand.stanC = false;
+        //    hand.stanT = false;
+        //    break;
+        //case IDM_ONLYCIRCLES:
+        //    hand.stanC = true;
+        //    hand.stanB = false;
+        //    hand.stanT = false;
+        //    break;        
+        //case IDM_ONLYTRIANGLES:
+        //    hand.stanT = true;
+        //    hand.stanB = false;
+        //    hand.stanC = false;
+        //    break;
         case IDM_TOWERCBT:
             make_tower_2(hWnd, hdc, ps, NULL, x, y);
             break;
@@ -525,13 +520,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_SETMASS:
         {
-            // Show the Set Mass dialog
             INT_PTR result = DialogBox(hInst, MAKEINTRESOURCE(IDD_SET_MASS_DIALOG), hWnd, SetMassDialogProc);
-            if (result == IDOK)
-            {
-                // Handle the OK button click in the dialog
-                // You can perform any additional actions here if needed
-            }
+            if (result == IDOK){}
             break;
         }
         case IDM_EXIT:
@@ -541,8 +531,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
     }
-
-    // do zrb dodać block'i góra dół i trójkąt do tych równań może hitboxy polepszyć
     case WM_KEYDOWN:
         switch (wParam)
         {
@@ -566,7 +554,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (boxes.x[pickme] + 2 <= triangles.x[g] + szer and boxes.y[pickme] + 50 > triangles.y[g] and boxes.y[pickme] < triangles.y[g] + 50)
                         block = 1;
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x-5, y))
                 {
                     x = x - 5;
                     boxes.x[pickme] -= 5;
@@ -590,7 +578,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (circles.x[pickme] <= triangles.x[g] + szer and circles.y[pickme] + 50 > triangles.y[g] and circles.y[pickme] < triangles.y[g] + 50)
                         block = 1;
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x-5, y))
                 {
                     x = x - 5;
                     circles.x[pickme] -= 5;
@@ -623,7 +611,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     triangles.x[pickme] -= 5;
                 }
             }
-            if (picked_up == 0) {
+            if (picked_up == 0 && hand.canMove(x-5, y)) {
                 if (hand.canMove(x - 5, y))
                     x = x - 5;
             }
@@ -651,7 +639,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (boxes.x[pickme] + 50 <= triangles.x[g] - szer and boxes.y[pickme] + 50 > triangles.y[g] and boxes.y[pickme] < triangles.y[g] + 50)
                         block = 1;
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x+5, y))
                 {
                     x = x + 5;
                     boxes.x[pickme] += 5;
@@ -675,7 +663,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (circles.x[pickme] + 50 >= triangles.x[g] - szer and circles.x[pickme] + 50 <= triangles.x[g] + szer and circles.y[pickme] + 50 > triangles.y[g] and circles.y[pickme] < triangles.y[g] + 50)
                         block = 1;
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x+5, y))
                 {
                     x = x + 5;
                     circles.x[pickme] += 5;
@@ -712,7 +700,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         }
                     }
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x+5, y))
                 {
                     x = x + 5;
                     triangles.x[pickme] += 5;
@@ -737,7 +725,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
 
-        case VK_DOWN:// nie ma hitboxa dokończonego
+        case VK_DOWN:
             block = 0;
             if (picked_up == 1 and shape == 's' && hand.canMove(x, y + 5))
             {
@@ -769,7 +757,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         block = 1;
 
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x, y + 5))
                 {
                     y = y + 5;
                     boxes.y[pickme] += 5;
@@ -805,7 +793,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         block = 1;
 
                 }
-                if (block == 0)
+                if (block == 0 && hand.canMove(x, y + 5))
                 {
                     y = y + 5;
                     circles.y[pickme] += 5;
@@ -840,7 +828,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (triangles.x[pickme] + 25 > triangles.y[g] and triangles.x[pickme] - 25 < triangles.x[g] and triangles.y[pickme] + 50 == triangles.y[g])
                         block = 1;
 
-                    if (block == 0)
+                    if (block == 0 && hand.canMove(x, y + 5))
                     {
                         y = y + 5;
                         triangles.y[pickme] += 5;
@@ -849,7 +837,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             if (picked_up == 0 && hand.canMove(x, y + 5))
                 y = y + 5;
-            else y = y;
+            else
+                y = y;
             repaintWindow(hWnd, hdc, ps, NULL, x, y);
             break;
         case VK_END:
@@ -870,13 +859,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= circles.x[g] and x <= circles.x[g] + 50)
                     {
                         bool pod_spodem = under_smth(circles, g);
-                        /*for (int h = 0; h < circles.x.size(); h++)
-                        {
-                            if (circles.y[g] - 50 == circles.y[h] and circles.x[g] + 50 > circles.x[h] and circles.x[g] < circles.x[h] + 50)
-                            {
-                                pod_spodem = 1;
-                            }
-                        }*/
 
                         if (picked_up == 0 and hand.checkMass(circles.masa[g]) and pod_spodem == 0)
                         {
@@ -1044,13 +1026,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (x >= triangles.x[g] - szer and x <= triangles.x[g] + szer)
                     {
                         bool pod_spodem = under_smth(triangles, g);
-                        //for (int h = 0; h < triangles.x.size(); h++)
-                        //{
-                        //    if (triangles.y[g] - 50 == triangles.y[h] and triangles.x[g] + 25 > triangles.x[h] - 25 and triangles.x[g] - 25 < triangles.x[h] + 25)
-                        //    {
-                        //        pod_spodem = 1;
-                        //    }
-                        //}
                         if (picked_up == 0 and hand.checkMass(triangles.masa[g]) and pod_spodem == 0)
                         {
                             pickme = g;
@@ -1152,7 +1127,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// Message handler for about box.
+// Message handler for about box
 
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
