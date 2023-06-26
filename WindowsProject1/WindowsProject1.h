@@ -72,7 +72,6 @@ public:
 		if (currentMass <= maxMass) return true;
 		else return false;
 	}
-
 };
 
 class Shapes {
