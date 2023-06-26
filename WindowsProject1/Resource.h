@@ -18,6 +18,15 @@
 #define IDM_CIRCLE				101
 #define IDM_TRIANGLE			111
 #define IDM_SQUARE				110
+#define IDM_SETMASS				113
+#define IDD_SET_MASS_DIALOG		115
+#define IDC_MASS_EDIT			116
+#define IDM_ONLYBOXES			117
+#define IDM_ONLYTRIANGLES		118
+#define IDM_ONLYCIRCLES			119
+#define IDM_NOLIMITS			120
+#define IDM_TOWERCBT			121
+#define IDM_TOWERBCT			122
 #endif
 // Next default values for new objects
 //
