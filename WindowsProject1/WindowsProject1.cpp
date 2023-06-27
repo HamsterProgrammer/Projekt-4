@@ -174,7 +174,7 @@ int chooseRandomShape(Shapes shape) {
     //check mass, under_smth or not
     for (int i = 0; i < shape.x.size(); i++) {
         if (under_smth(shape, i)) continue;
-        else if (hand.checkMass(circles.masa[i])) {
+        else if (hand.checkMass(shape.masa[i])) {
             return i;
         }
     }
