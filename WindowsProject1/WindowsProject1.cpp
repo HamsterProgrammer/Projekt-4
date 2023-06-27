@@ -757,6 +757,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         block = 1;
 
                 }
+                if (boxes.y[pickme] + 50 == ground)
+                    block = 1;
                 if (block == 0 && hand.canMove(x, y + 5))
                 {
                     y = y + 5;
@@ -793,6 +795,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         block = 1;
 
                 }
+                if (circles.y[pickme] + 50 == ground)
+                    block = 1;
                 if (block == 0 && hand.canMove(x, y + 5))
                 {
                     y = y + 5;
@@ -827,13 +831,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     }
                     if (triangles.x[pickme] + 25 > triangles.y[g] and triangles.x[pickme] - 25 < triangles.x[g] and triangles.y[pickme] + 50 == triangles.y[g])
                         block = 1;
-
+                }
+                    if (triangles.y[pickme] + 50 == ground)
+                        block = 1;
                     if (block == 0 && hand.canMove(x, y + 5))
                     {
                         y = y + 5;
                         triangles.y[pickme] += 5;
                     }
-                }
+                
             }
             if (picked_up == 0 && hand.canMove(x, y + 5))
                 y = y + 5;
