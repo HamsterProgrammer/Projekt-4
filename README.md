@@ -1,13 +1,13 @@
 # Projekt-4
 ## OPIS DLA UŻYTKOWNIKA
-Program służy do układania kontenerów o różnych kształtach za pomocą dźwigu. 
-Podnosić może jedynie 3 kształty: kwadraty, trójkąty i okręgi.
-Dźwig ogranicza również masa podnoszonego elementu która wynosi domyślnie 100.
-Użytkownik może układać wieże składająca się jedynie z tych samych kształtów.
-Istnieje również opcja ułożenia wieży za użytkownika składającej się z wszystkich 3 kształtów
-Użytkownik może dowolnie zmieniać maksymalną dopuszczalną masę, jaką dźwig może podnieść 
+- Program służy do układania kontenerów o różnych kształtach za pomocą dźwigu. 
+- Podnosić może jedynie 3 kształty: kwadraty, trójkąty i okręgi.
+- Dźwig ogranicza również masa podnoszonego elementu która wynosi domyślnie 100.
+- Użytkownik może układać wieże składająca się jedynie z tych samych kształtów.
+- Istnieje również opcja ułożenia wieży za użytkownika składającej się z wszystkich 3 kształtów
+- Użytkownik może dowolnie zmieniać maksymalną dopuszczalną masę, jaką dźwig może podnieść    
     *MENU - Options - Set Mass - w oknie dialogowym wpisz żądaną mase*
-Użytkownik może dodać dowolną figurę w losowym miejscu o losowej masie. 
+- Użytkownik może dodać dowolną figurę w losowym miejscu o losowej masie   
     *MENU - Draw - Circle/Box/Triangle*
 ### STEROWANIE:
 * Strzałki - poruszanie dźwigiem
