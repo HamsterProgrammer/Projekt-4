@@ -10,8 +10,8 @@ Użytkownik może dowolnie zmieniać maksymalną dopuszczalną masę, jaką dźw
 Użytkownik może dodać dowolną figurę w losowym miejscu o losowej masie. 
     *MENU - Draw - Circle/Box/Triangle*
 ### STEROWANIE:
-*Strzałki - poruszanie dźwigiem
-*Enter - podnoszenie/opuszczanie kontenera
+* Strzałki - poruszanie dźwigiem
+* Enter - podnoszenie/opuszczanie kontenera
 
 ## OPIS DZIAŁANIA PROGRAMU
 Program jest napisany przy użyciu OOP. 
