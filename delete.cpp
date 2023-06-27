@@ -39,20 +39,20 @@ std::vector<int> circles_x = { 600, 700 };
 std::vector<int> circles_y = { 200, 200 };
 std::vector<int> circles_masa = { 100, 100 };
 
-/*zmieniæ ¿eby nie by³o triangle_x itd wszystko zapisuje siê w boxes i jak chce siê stworzyæ trójk¹t to po prostu siê odp funkcja wczyta
-¿eby sprawdza³o czy jest trójk¹tem, kwadratem ... to bd funkcja sprawdzaj¹ca czy jest któr¹œ z tych 3 to oddaje wartoœæ true i mo¿e sprawdzaæ czy x znajduje siê
-w tych figurach aby je podnieœæi mamy pierwsze 3 gotowe póŸniej dodaæ sprawdzanie masy(mo¿e pokazywanie jej?) i mamy 4 to œmieszne budowanie to idk */
+/*zmieniÃ¦ Â¿eby nie byÂ³o triangle_x itd wszystko zapisuje siÃª w boxes i jak chce siÃª stworzyÃ¦ trÃ³jkÂ¹t to po prostu siÃª odp funkcja wczyta
+Â¿eby sprawdzaÂ³o czy jest trÃ³jkÂ¹tem, kwadratem ... to bd funkcja sprawdzajÂ¹ca czy jest ktÃ³rÂ¹Å“ z tych 3 to oddaje wartoÅ“Ã¦ true i moÂ¿e sprawdzaÃ¦ czy x znajduje siÃª
+w tych figurach aby je podnieÅ“Ã¦i mamy pierwsze 3 gotowe pÃ³Å¸niej dodaÃ¦ sprawdzanie masy(moÂ¿e pokazywanie jej?) i mamy 4 to Å“mieszne budowanie to idk */
 
 void MyOnPaint(HDC hdc, int x, int y)     
 {
     Graphics graphics(hdc);         
     Pen pen(Color(255, 0, 0, 255));             
-    graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd ¿e wspó³rzêdne zale¿a od tego jak przytrzymasz czy inny chuj i jeœli 
-                                                            // coœ siê zetknie czycos to sie klei do sb albo jak sie kliknie wspó³. sie zapisuja itp itd
+    graphics.DrawLine(&pen, x, 10, x, y);      // rysuj xyz tu bd Â¿e wspÃ³Â³rzÃªdne zaleÂ¿a od tego jak przytrzymasz czy inny chuj i jeÅ“li 
+                                                            // coÅ“ siÃª zetknie czycos to sie klei do sb albo jak sie kliknie wspÃ³Â³. sie zapisuja itp itd
 }
 
-// zrb wierzcho³ki ile wierzcho³ków ma figura i gdzie
-std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kó³ka sprawdŸ czy s¹ równe       
+// zrb wierzchoÂ³ki ile wierzchoÂ³kÃ³w ma figura i gdzie
+std::vector<int> wierzcholki{ {4} };  // przy sprawdzaniu kwadratu i kÃ³Â³ka sprawdÅ¸ czy sÂ¹ rÃ³wne       
 
 void drawBox(HDC hdc, std::vector<int> boxes_x, std::vector<int> boxes_y)
 {
@@ -243,7 +243,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
     }
-    // dodaæ picked_up = 0, 1, 2 w zale¿noœci co to jest
+    // dodaÃ¦ picked_up = 0, 1, 2 w zaleÂ¿noÅ“ci co to jest
 
     case WM_KEYDOWN:
         switch (wParam)
@@ -260,7 +260,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 if (block == 0)
                 {
                     x = x - 5;
-                    boxes_x[pickme] -= 5;// tu ograniczenia dla d³ugoœci dŸwigu
+                    boxes_x[pickme] -= 5;// tu ograniczenia dla dÂ³ugoÅ“ci dÅ¸wigu
                 }
             }
             else
@@ -336,7 +336,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         else if (picked_up == 1)
                         {
                             picked_up = 0;
-                            /*  while (boxes_y.back() < ground)//dodaæ spadanie
+                            /*  while (boxes_y.back() < ground)//dodaÃ¦ spadanie
                               {
                                   boxes_y.back() -= 5;
                                   repaintWindow(hWnd, hdc, ps, NULL, x, y);
